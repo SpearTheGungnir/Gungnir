@@ -4,15 +4,12 @@ node_pid=$(lsof -t -i:3000)
 # [ -n str ]判断str是否不为空，⑨表示强制
 [ -n "$node_pid" ] && kill -9 $node_pid
 
+# 更新目录
 rm -rf /home/myapp
 cp -r ${WORKSPACE}/source/server/myapp /home
-cd /home/myapp
-npm install
 
-BUILD_ID=DONTKILLME
-# startnode.sh
+# 将启动相关的脚本放在startnode.sh内
 # cd /home/myapp
 # npm install
 # nohup npm start&
-# 不知为何要套一层sh才能不被杀死
-sh /home/startnode.sh
+daemonize -E BUILD_ID=dontKillMe /home/startnode.sh
