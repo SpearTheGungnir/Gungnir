@@ -10,7 +10,9 @@ cd /home/myapp
 npm install
 
 BUILD_ID=DONTKILLME
-# 这里肯定有bug，按官方的说明只需BUILD_ID=DONTKILLME即可不杀死子进程，然而并没有什么卵用。经过1个多小时的实验，无意发现加上一句输出后就会正常
-echo ${BUILD_ID}
-# nohup后台运行
-nohup npm start&
+# startnode.sh
+# cd /home/myapp
+# npm install
+# nohup npm start&
+# 不知为何要套一层sh才能不被杀死
+sh /home/startnode.sh
