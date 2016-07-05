@@ -39,7 +39,7 @@ router.post('/register', function(req, res, next) {
 });
 
 /* Login Check */
-router.get('/login', function(req, res, next) {
+router.post('/login', function(req, res, next) {
   if (req.body.user == null || req.body.pwd == null) {
     res.json({res : false, info : "bad request"});
     return;
