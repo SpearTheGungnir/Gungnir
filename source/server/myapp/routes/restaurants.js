@@ -44,4 +44,14 @@ router.get('/add', function(req, res, next) {
   });
 });
 
+/* DELETE restaurants */
+router.get('/delete/:id', function(req, res, next) {
+  Restaurant.findByIdAndRemove(req.params.id, function(err) {
+    if (err)
+      res.json({res : false, info : "remove fail"});
+    else
+      res.json({res : true, info : ""});
+  });
+});
+
 module.exports = router;

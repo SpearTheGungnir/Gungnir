@@ -44,9 +44,9 @@ router.post('/login', function(req, res, next) {
     res.json({res : false, info : "bad request"});
     return;
   }
-  user.count({user : req.body.user, pwd : req.body.pwd}, function (err, doc) {
-    if (doc === 1) {
-      res.json({res : true, info : ""});
+  user.findOne({user : req.body.user, pwd : req.body.pwd}, function (err, doc) {
+    if (doc !== null) {
+      res.json({res : true, info : doc._id});
     } else {
       res.json({res : false, info : "wrong"});
     }
