@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var user = require('../models/user');
-mongoose.connect('mongodb://localhost/gungnir');
+//mongoose.connect('mongodb://localhost/gungnir');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
