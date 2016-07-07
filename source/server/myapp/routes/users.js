@@ -47,7 +47,7 @@ router.post('/register', function(req, res, next) {
 
 /* REGISTER Step-2 */
 router.post('/register', function(req, res, next) {
-  var query = 'insert into users values (null, ?, ?, curtime())';
+  var query = 'insert into users values (null, ?, ?, now())';
   console.log(new Date() + ': [mysql-insert] - ' + query);
   mysql.query(query, [req.body.user, req.body.pwd], function(err, rows, fields) {
     if (err) {
