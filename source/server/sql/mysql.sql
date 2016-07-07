@@ -26,7 +26,7 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uname` varchar(32) DEFAULT NULL,
   `pwd` varchar(32) DEFAULT NULL,
-  `time` datetime DEFAULT CURRENT_TIMESTAMP,
+  `time` datetime,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uname` (`uname`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
