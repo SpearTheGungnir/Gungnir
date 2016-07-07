@@ -47,7 +47,7 @@ router.post('/register', function(req, res, next) {
 
 /* REGISTER Step-2 */
 router.post('/register', function(req, res, next) {
-  var query = 'insert into users values (null, ?, ?)';
+  var query = 'insert into users values (null, ?, ?, curtime())';
   console.log(new Date() + ': [mysql-insert] - ' + query);
   mysql.query(query, [req.body.user, req.body.pwd], function(err, rows, fields) {
     if (err) {
@@ -57,8 +57,6 @@ router.post('/register', function(req, res, next) {
     else {
       console.log(new Date() + ': [mysql-insert] - Succeeded! ' + rows.length + ' row' + (rows.length > 1 ? 's' : '') + ' in set');
       console.log(new Date() + ': [register] - Succeeded!');
-      console.log(rows);
-      console.log(fields);
       res.json({res : true, info : ''});
     }
   });
@@ -72,6 +70,7 @@ router.post('/login', function(req, res, next) {
 		return;
 	}
 	var query = 'select id from users where uname = ? and pwd = ? limit 1';
+  console.log(new Date() + ': [mysql-query] - ' + query);
 	mysql.query(query, [req.body.user, req.body.pwd], function(err, rows, fields) {
     if (err) {
       console.log(new Date() + ': [mysql-query] - ' + err);
