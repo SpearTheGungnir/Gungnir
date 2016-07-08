@@ -14,6 +14,7 @@
     "morgan": "~1.7.0",
     "serve-favicon": "~2.3.0",
     "mysql": "latest",
-    "node-mysql": "latest"
+    "node-mysql": "latest",
+		"express-session": "latest"
   }
 }
