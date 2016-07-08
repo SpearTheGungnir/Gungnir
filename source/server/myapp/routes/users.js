@@ -4,7 +4,7 @@ var mysql = require('../connect/mysql');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  var page = req.query.page;
+  var page = parseInt(req.query.page);
   var numPage = 10;  // the number of users in a page
   var query = 'select * from users';
   if (!isNaN(page) && page >= 0) {
@@ -19,6 +19,11 @@ router.get('/', function(req, res, next) {
 				rows.length + ' row' + (rows.length > 1 ? 's' : '') + ' in set'); 
     res.json(rows);
   });
+});
+
+router.get('/session', function (req, res, next) {
+	console.log(req.session);
+	res.json(req.session);
 });
 
 /* REGISTER Step-1 */
@@ -81,11 +86,95 @@ router.post('/login', function(req, res, next) {
 			rows.length + ' row' + (rows.length > 1 ? 's' : '') + ' in set'); 
 		if (rows.length) {
 		  console.log(new Date() + ': [login] - User: ' + req.body.user + ' - Succeeded!');
+			req.session.userid = rows[0].id;
 			res.json({res : true, info : rows[0].id});
 		} else {
 			console.log(new Date() + ': [login] - User: ' + req.body.user + ' - Failed!');
 			res.json({res : false, info : 'wrong'});
 		}
+	});
+});
+
+/* LOGOUT */
+router.get('/logout', function(req, res, next) {
+  console.log(new Date() + ': [logout] - ' + req.session.userid);
+	req.session.userid = -1;
+	res.json({res : true, info : ""});
+});
+
+/* DELETE user - step 1 */
+router.get('/delete', function(req, res, next) {
+	if (req.query.user == null || isNaN(req.query.user)) {
+    console.log(new Date() + ': [delete-user] - bad request');
+		res.json({res : false, info : 'bad request'});
+		return;
+	}
+	var loginid = req.session.userid;
+	if (loginid == null || loginid <= 0 || isNaN(loginid)) {
+    console.log(new Date() + ': [delete-user] - logout');
+		res.json({res : false, info : 'logout'});
+		return;
+	}
+  var query = 'select type from users where id = ?';
+	console.log(new Date() + ': [mysql-query] - ' + query);
+	mysql.query(query, [loginid], function (err, rows, fields) {
+	  if (err) {
+    	console.log(new Date() + ': [mysql-query] - ' + err);
+			res.json({res : false, info : 'query fail'});
+			return;
+		}
+		if (rows.length === 0) {
+			console.log(new Date() + ': [delete-user] - user don\'t exist');
+			res.json({res : false, info : 'bad user'});
+			return;
+		}
+		var type = rows[0].type;
+		if (type == 2) {  // has power
+			next();
+		} else {
+			console.log(new Date() + ': [delete-user] - no power');
+			res.json({res : false, info : 'no power'});
+		}
+	});
+});
+
+/* DELETE user - step 2 */
+router.get('/delete', function(req, res, next) {
+	var query = 'select type from users where id = ?';
+	console.log(new Date() + ': [mysql-query] - ' + query);
+	mysql.query(query, [req.query.user], function(err, rows, fields) {
+    if (err) {
+    	console.log(new Date() + ': [mysql-query] - ' + err);
+			res.json({res : false, info : 'query fail'});
+			return;
+		}
+		if (rows.length === 0) {
+			console.log(new Date() + ': [delete-user] - user don\'t exist');
+			res.json({res : false, info : 'bad user'});
+			return;
+		}
+		var type = rows[0].type;
+		if (type != 2) {  // can delete
+			next();
+		} else {
+			console.log(new Date() + ': [delete-user] - denied');
+			res.json({res : false, info : 'denied'});
+		}
+	});
+});
+
+/* DELETE user - step 3 */
+router.get('/delete', function(req, res, next) {
+	var query = 'delete from users where id = ?';
+	console.log(new Date() + ': [mysql-query] - ' + query);
+	mysql.query(query, [req.query.user], function(err, rows, fields) {
+    if (err) {
+    	console.log(new Date() + ': [mysql-query] - ' + err);
+			res.json({res : false, info : 'query fail'});
+			return;
+		}
+		console.log(new Date() + ': [delete-user] - Succeeded!');
+		res.json({res : true, info : ''});
 	});
 });
 
