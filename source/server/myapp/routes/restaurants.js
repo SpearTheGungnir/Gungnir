@@ -20,9 +20,9 @@ router.get('/', function(req, res, next) {
 		res.json(rows);
 	});
 });
-
+/* TODO
 router.get('/add', function(req, res, next) {
 	if (req.query.name == null || req.query.name == '' || req.query.addr)
 });
-
+*/
 module.exports = router;
