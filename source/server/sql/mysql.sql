@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 5.7.12, for Linux (i686)
+-- MySQL dump 10.13  Distrib 5.7.12, for Linux (x86_64)
 --
 -- Host: localhost    Database: gungnir
 -- ------------------------------------------------------
@@ -29,11 +29,13 @@ CREATE TABLE `restaurants` (
   `addr` varchar(128) DEFAULT NULL,
   `tel` varchar(16) DEFAULT NULL,
   `feature` varchar(128) DEFAULT NULL,
+  `photo` varchar(255) DEFAULT NULL,
   `time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `owner_2` (`owner`),
   KEY `owner` (`owner`),
   CONSTRAINT `restaurants_ibfk_1` FOREIGN KEY (`owner`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,8 +44,37 @@ CREATE TABLE `restaurants` (
 
 LOCK TABLES `restaurants` WRITE;
 /*!40000 ALTER TABLE `restaurants` DISABLE KEYS */;
-INSERT INTO `restaurants` VALUES (1,'KFC',1,'BJTU','4008-517-517','cheap','2016-07-08 15:00:36');
+INSERT INTO `restaurants` VALUES (1,'KFC',1,'BJTU','4008-517-517','cheap',NULL,'2016-07-08 15:00:36');
 /*!40000 ALTER TABLE `restaurants` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `rmark`
+--
+
+DROP TABLE IF EXISTS `rmark`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `rmark` (
+  `uid` int(11) NOT NULL,
+  `rid` int(11) NOT NULL,
+  `score` int(11) NOT NULL DEFAULT '5',
+  `time` datetime DEFAULT NULL,
+  PRIMARY KEY (`uid`,`rid`),
+  KEY `rid` (`rid`),
+  CONSTRAINT `rmark_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `rmark_ibfk_2` FOREIGN KEY (`rid`) REFERENCES `restaurants` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rmark`
+--
+
+LOCK TABLES `rmark` WRITE;
+/*!40000 ALTER TABLE `rmark` DISABLE KEYS */;
+INSERT INTO `rmark` VALUES (1,1,4,'2016-07-09 11:07:28'),(3,1,2,'2016-07-09 11:07:39');
+/*!40000 ALTER TABLE `rmark` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -58,10 +89,10 @@ CREATE TABLE `users` (
   `uname` varchar(32) DEFAULT NULL,
   `pwd` varchar(32) DEFAULT NULL,
   `type` int(11) DEFAULT '0',
-  `time` datetime DEFAULT CURRENT_TIMESTAMP,
+  `time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uname` (`uname`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,7 +101,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'233','233',2,'2016-07-07 16:26:07'),(3,'aaaa','aaa',0,'2016-07-08 17:19:22'),(4,'aaaaa','aaa',0,'2016-07-08 17:19:24'),(5,'aaaaaa','aaa',1,'2016-07-08 17:19:28');
+INSERT INTO `users` VALUES (1,'233','233',2,'2016-07-07 16:26:07'),(3,'aaaa','aaa',0,'2016-07-08 17:19:22'),(4,'aaaaa','aaa',0,'2016-07-08 17:19:24'),(5,'aaaaaa','aaa',1,'2016-07-08 17:19:28'),(6,'mg','ok',1,'2016-07-09 10:19:12');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -83,4 +114,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-07-08 23:40:33
+-- Dump completed on 2016-07-09 11:56:44
