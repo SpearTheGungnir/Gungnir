@@ -52,7 +52,10 @@ router.post('/register', function(req, res, next) {
 
 /* REGISTER Step-2 */
 router.post('/register', function(req, res, next) {
-  var query = 'insert into users values (null, ?, ?, now())';
+  var query = 'insert into users values (null, ?, ?, 0, now())';
+	var type = parseInt(req.body.type);
+	if (!isNaN(type) && type === 1)
+	  query = 'insert into users values (null, ?, ?, 1, now())';
   console.log(new Date() + ': [mysql-insert] - ' + query);
   mysql.query(query, [req.body.user, req.body.pwd], function(err, rows, fields) {
     if (err) {
@@ -74,7 +77,7 @@ router.post('/login', function(req, res, next) {
 		res.json({res : true, info : 'bad request'});
 		return;
 	}
-	var query = 'select id from users where uname = ? and pwd = ? limit 1';
+	var query = 'select id, uname from users where uname = ? and pwd = ? limit 1';
   console.log(new Date() + ': [mysql-query] - ' + query);
 	mysql.query(query, [req.body.user, req.body.pwd], function(err, rows, fields) {
     if (err) {
@@ -87,7 +90,7 @@ router.post('/login', function(req, res, next) {
 		if (rows.length) {
 		  console.log(new Date() + ': [login] - User: ' + req.body.user + ' - Succeeded!');
 			req.session.userid = rows[0].id;
-			res.json({res : true, info : rows[0].id});
+			res.json({res : true, info : {name : rows[0].uname, id : rows[0].id}});
 		} else {
 			console.log(new Date() + ': [login] - User: ' + req.body.user + ' - Failed!');
 			res.json({res : false, info : 'wrong'});
