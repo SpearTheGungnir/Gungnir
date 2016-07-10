@@ -1,6 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var mysql = require('../connect/mysql');
+var formidable = require('formidable');
+var fs=require('fs');
+var path=require('path');
+var json=require('../json/restaurant.json');
 
 /* GET resturants listing */
 router.get('/', function(req, res, next) {
@@ -27,13 +31,15 @@ router.get('/add', function(req, res, next) {
 			req.query.addr == null || req.query.tel == null ||
 			req.query.feature == null) {
 		console.log(new Date()  + ': [restaurant-add] - bad request');
-		res.json({res : false, info : 'bad request'});
+		//res.json({res : false, info : 'bad request'});
+		res.render('result', json);
 		return;
 	}
 	var userid = parseInt(req.session.userid);
   if (isNaN(req.session.userid) || userid <= 0) {
 		console.log(new Date() + ': [restaurant-add] - logout');
-		res.json({res : false, info : 'logout'});
+		//res.json({res : false, info : 'logout'});
+		res.render('result', json);
 		return;
 	}
 	var query = 'select type from users where id = ? limit 1';
@@ -41,7 +47,8 @@ router.get('/add', function(req, res, next) {
 	mysql.query(query, [userid], function(err, rows, fields) {
 		if (err) {
 			console.log(new Date() + ': [mysql-query] - ' + err);
-			res.json({res : false, info : 'query fail'});
+			//res.json({res : false, info : 'query fail'});
+      res.render('result', json);
 		} else {
 			console.log(new Date() + ': [mysql-query] - Secceeded! ' +
 				rows.length + ' row' + (rows.length > 1 ? 's' : '') + ' in set');
@@ -50,11 +57,13 @@ router.get('/add', function(req, res, next) {
 					next();			// pass!
 				} else {
 					console.log(new Date() + ': [restaurant-add] - no power');
-					res.json({res : false, info : 'no power'});
+					//res.json({res : false, info : 'no power'});
+          res.render('result', json);
 				}
 			} else {
 				console.log(new Date() + ': [restaurant-add] - user don\'t exist');
-				res.json({res : false, info : 'bad user'});
+				//res.json({res : false, info : 'bad user'});
+        res.render('result', json);
 			}
 		}
 	});
@@ -62,15 +71,18 @@ router.get('/add', function(req, res, next) {
 
 /* ADD restaurant step-2 */
 router.get('/add', function(req, res, next) {
-	var query = 'insert into restaurants values (null, ?, ?, ?, ?, ?, null, now())';
+  var query = 'insert into restaurants values (null, ?, ?, ?, ?, ?, null, now())';
 	console.log(new Date() + ': [mysql-query] - ' + query);
 	mysql.query(query, [req.query.name, req.session.userid, req.query.addr, req.query.tel, req.query.feature], function(err, rows, fields) {
 		if (err) {
 			console.log(new Date() + ': [mysql-query] - ' + err);
-      res.json({res : false, info : 'insert fail'});
+      //res.json({res : false, info : 'insert fail'});
+      res.render('result', json);
 		} else {
 			console.log(new Date() + ': [restaurant-add] - Succeeded!');
-			res.json({res : true, info : ''});
+			//res.json({res : true, info : ''});
+			json.result = '成功了';
+      res.render('result', json);
 		}
 	});
 });
@@ -145,33 +157,37 @@ router.get('/delete', function(req, res, next) {
 	});
 });
 
-/* UPDATE restaurants - step 1 */
+/* UPDATE restaurants - step 1 !!!!!*/
 router.get('/update', function(req, res, next) {
 	if (req.query.name == null || req.query.name == '' ||
 		req.query.addr == null || req.query.tel == null ||
 		req.query.feature == null) {  //输入检测
 		console.log(new Date()  + ': [update-restaurant] - bad request');
-		res.json({res : false, info : 'bad request'});
+		//res.json({res : false, info : 'bad request'});
+		res.render('result', json);		
 		return;
 	}
 	
 	var loginid = req.session.userid;
 	if (loginid == null || loginid <= 0 || isNaN(loginid)) { //登录检测
     console.log(new Date() + ': [update-restaurant] - logout');
-		res.json({res : false, info : 'logout'});
+		//res.json({res : false, info : 'logout'});
+		res.render('result', json);
 		return;
 	}
-  var query = 'select 1 from restaurants where owner = ? and id = ?';
+    var query = 'select 1 from restaurants where owner = ?';// and id = ?';因为owner是unique
 	console.log(new Date() + ': [mysql-query] - ' + query);
-	mysql.query(query, [loginid, req.query.rid], function (err, rows, fields) { //更新操作的用户是否存在且有权限（操作者id==owner）
+	mysql.query(query, [loginid], function (err, rows, fields) { //更新操作的用户是否存在且有权限（操作者id==owner）
 	  if (err) {
     	console.log(new Date() + ': [mysql-query] - ' + err);
-			res.json({res : false, info : 'query fail'});
+			//res.json({res : false, info : 'query fail'});
+			res.render('result', json);
 			return;
 		}
 		if (rows.length === 0) {
 			console.log(new Date() + ': [update-restaurant] - owner of this reataurant doesn\'t exist OR restaurant doesn\'t exist');
-			res.json({res : false, info : 'bad onwer OR bad restaurant'});
+			//res.json({res : false, info : 'bad onwer OR bad restaurant'});
+			res.render('result', json);
 			return;
 		}
 		next();
@@ -180,20 +196,114 @@ router.get('/update', function(req, res, next) {
 
 
 
-/* UPDATE restaurant - step 2 */
+/* UPDATE restaurant - step 2 !!!!*/
 router.get('/update', function(req, res, next) {
-	var query = 'update restaurants set rname = ?, addr = ?, tel = ?, feature = ? where id = ?';
+	var query = 'update restaurants set rname = ?, addr = ?, tel = ?, feature = ? where owner = ?';//id = ?';
 	console.log(new Date() + ': [mysql-query] - ' + query);
-	mysql.query(query, [req.query.name, req.query.addr, req.query.tel, req.query.feature, req.query.rid], function(err, rows, fields) { //Update餐厅
+	mysql.query(query, [req.query.name, req.query.addr, req.query.tel, req.query.feature, req.session.userid], function(err, rows, fields) { //Update餐厅, 我就认为到这一步的时候还没有掉线……
     if (err) {
     	console.log(new Date() + ': [mysql-query] - ' + err);
-			res.json({res : false, info : 'query fail'});
+			//res.json({res : false, info : 'query fail'});
+			res.render('result', json);
 			return;
 		}
 		console.log(new Date() + ': [update-restaurant] - Succeeded!');
-		res.json({res : true, info : ''});
+		//res.json({res : true, info : ''});
+		json.result = '成功了';
+		res.render('result', json);
 	});
 });
 
+/* UPLOAD photo  */
+router.post('/upload', function(req, res, next) {
+	var form = new formidable.IncomingForm();
+	form.encoding = 'utf-8';
+	form.uploadDir = path.join(__dirname, '..', 'uploads'); 
+	form.keepExtensions = true;
+	form.maxFieldsSize = 2 * 1024 * 1024;
+
+	form.parse(req, function(err, fields,files) {
+		if (err) {
+			console.log(new Date() + ': [upload] - ' + err);
+			res.end();
+			return;
+		}
+		var ext = '';
+		switch (files.upload.type) {
+			case 'image/pjpeg':
+				ext = 'jpg';
+				break;
+			case 'image/jpeg':
+				ext = 'jpg';
+				break;
+			case 'image/png':
+				ext = 'png';
+				break;
+			case 'image/x-png':
+				ext = 'png';
+				break;
+			default:
+				res.end();
+				return;
+		}
+		var query = 'select id from restaurants where owner = ? limit 1';
+		mysql.query(query, [req.session.userid], function(err, rows, fields) {
+			if (err) {
+				console.log(new Date() + ': [mysql-query] - ' + err);
+				res.end();
+				return;
+			}
+			if (rows.length === 0) {
+				console.log(new Date() + ': [upload] - bad user')
+				res.end();
+				return;
+			}
+			var uid = rows[0].id;
+			var newName = uid + '.' + ext;
+			var distPath = path.join(__dirname, '..', 'public/img/restaurants/');
+			// mv file
+			fs.renameSync(files.upload.path, distPath + newName);
+			console.log(new Date() + ': [upload] - Succeeded! - ' + newName);
+			var query = 'update restaurants set photo = ? where id = ?';
+			console.log(new Date() + ': [mysql-query] - ' + query);
+			mysql.query(query, ['/img/restaurants/' + newName, uid], function(err, rows, fields) {
+				if (err) {
+					console.log(new Date() + ': [mysql-query] - ' + err);
+					res.end();
+				} else 
+					res.end();
+			})
+		});
+	});
+});
+
+/* ADD MARK */
+router.get('/addMark', function(req, res, next) {
+	if (req.query.rid == null || req.query.rid == '' ||
+		req.query.uid == null || req.query.score == null ) {  //输入检测
+		console.log(new Date()  + ': [add-rmark-restaurant] - bad request');
+		res.json({res : false, info : 'bad request'});
+		return;
+	}
+	
+	var loginid = req.session.userid;
+	if (loginid == null || loginid <= 0 || isNaN(loginid)) { //登录检测
+    console.log(new Date() + ': [add-rmark-restaurant] - logout');
+		res.json({res : false, info : 'logout'});
+		return;
+	}	
+	
+	var query = 'insert into rmark values(?, ?, ?, now())';
+	console.log(new Date() + ': [mysql-query] - ' + query);
+	mysql.query(query, [req.query.uid, req.query.rid, req.query.score], function(err, rows, fields) {
+		if (err) {
+			console.log(new Date() + ': [mysql-query] - ' + err);
+        res.json({res : false, info : 'insert fail'});   //可防止重复评分
+		} else {
+			console.log(new Date() + ': [add-rmark-restaurant] - Succeeded!');
+			res.json({res : true, info : ''});
+		}
+	});
+});
 
 module.exports = router;

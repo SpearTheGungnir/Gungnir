@@ -9,7 +9,7 @@
 		<form action='/restaurants/<%= action %>' method='GET'>
 			<table>
 				<tr>
-					<td>餐馆名：</td><td><input type='text' name='rname' value='<%= rname %>' maxlength='32' id='rname'/></td>
+					<td>餐馆名：</td><td><input type='text' name='name' value='<%= rname %>' maxlength='32' id='rname'/></td>
 				</tr>
 				<tr>
 					<td>地址：</td><td><input type='text' name='addr' value='<%= addr %>' maxlength='32'/></td>
@@ -24,6 +24,10 @@
 					<td><input type='submit' value='提交'/></td>
 				</tr>
 			</table>
+		</form>
+		<form action='/restaurants/upload' method='POST' enctype='multipart/form-data'>
+			<input type='file' name='upload'/>
+			<input type='submit' value='上传图片' <%= disabled %>/>
 		</form>
 	</body>
 </html>
