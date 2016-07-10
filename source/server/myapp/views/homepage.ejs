@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+		<script>
+			function logout() {
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.open('GET', '/users/logout', true);
+				xmlhttp.send();
+				window.location.href = '/';
+			}
+		</script>
+  </head>
+  <body>
+		<p>Hi! <%= username %><button type='button' onclick='logout()'>注销</button></p>
+		<% if (usertype) { %>
+			<a href='/manager/homepage/restaurant'>管理餐厅</a>
+		<% } %>
+  </body>
+</html>

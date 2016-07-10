@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <p>Welcome to <%= title %></p>
+		<form action='/restaurants/<%= action %>' method='GET'>
+			<table>
+				<tr>
+					<td>餐馆名：</td><td><input type='text' name='rname' value='<%= rname %>' maxlength='32' id='rname'/></td>
+				</tr>
+				<tr>
+					<td>地址：</td><td><input type='text' name='addr' value='<%= addr %>' maxlength='32'/></td>
+				</tr>
+				<tr>
+					<td>电话：</td><td><input type='text' name='tel' value='<%= tel %>' maxlength='16'/></td>
+				</tr>
+				<tr>
+					<td>简介：</td><td><input type='text' name='feature' value='<%= tel %>' maxlength='128'/></td>
+				</tr>
+				<tr>
+					<td><input type='submit' value='提交'/></td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>

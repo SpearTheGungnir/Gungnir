@@ -77,7 +77,7 @@ router.post('/login', function(req, res, next) {
 		res.json({res : true, info : 'bad request'});
 		return;
 	}
-	var query = 'select id, uname from users where uname = ? and pwd = ? limit 1';
+	var query = 'select id, uname, type from users where uname = ? and pwd = ? limit 1';
   console.log(new Date() + ': [mysql-query] - ' + query);
 	mysql.query(query, [req.body.user, req.body.pwd], function(err, rows, fields) {
     if (err) {
@@ -90,7 +90,9 @@ router.post('/login', function(req, res, next) {
 		if (rows.length) {
 		  console.log(new Date() + ': [login] - User: ' + req.body.user + ' - Succeeded!');
 			req.session.userid = rows[0].id;
-			res.json({res : true, info : {name : rows[0].uname, id : rows[0].id}});
+			req.session.username = rows[0].uname;
+			req.session.type = rows[0].type;
+			res.json({res : true, info : {name : rows[0].uname, id : rows[0].id, type : rows[0].type}});
 		} else {
 			console.log(new Date() + ': [login] - User: ' + req.body.user + ' - Failed!');
 			res.json({res : false, info : 'wrong'});

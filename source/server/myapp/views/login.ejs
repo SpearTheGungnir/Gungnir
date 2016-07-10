@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+	  <script>
+			function ajax() {
+				var user = document.getElementById('user').value;
+				var pwd = document.getElementById('pwd').value;
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function() {
+					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+					  var json = eval('(' + xmlhttp.responseText + ')');
+						if (json.res)
+							window.location.href = '/manager/homepage';
+						else
+							alert('登录失败');
+					}
+				}
+				xmlhttp.open('POST', '/users/login', true);
+				xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+				xmlhttp.send('user=' + encodeURIComponent(user) + '&pwd=' + encodeURIComponent(pwd));
+			}
+	  </script>
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+		<form action='' onsubmit='return false'>
+			<table>
+				<tr>
+					<td>用户名：</td><td><input id='user' type='text' name='user'/></td>
+				</tr>
+				<tr>
+					<td>密码：</td><td><input id='pwd' type='password' name='pwd'/></td>
+				</tr>
+				<tr>
+					<td><input type='submit' value='登录' onclick='ajax()'/></td>
+					<td><input type='button' value='注册'></td>
+				</tr>
+			</table>
+		</form>
+  </body>
+</html>
