@@ -7,6 +7,11 @@ router.get('/login', function(req, res, next) {
 	res.render('login', { title: 'Login' });
 });
 
+/* register */
+router.get('/register', function(req, res, next) {
+	res.render('register', { title: 'Register' });		
+});
+
 router.get('/homepage', function(req, res, next) {
 	var userid = parseInt(req.session.userid);
 	if (isNaN(userid) || userid <= 0) {

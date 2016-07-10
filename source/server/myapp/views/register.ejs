@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+		<script>
+			function ajax() {
+				var user = document.getElementById('name').value;
+				var pwd1 = document.getElementById('pwd').value;
+				var pwd2 = document.getElementById('repwd').value;
+				if (user.length === 0) {
+					alert('用户名不能为空');
+					return;
+				}
+				if (pwd1.length === 0) {
+					alert('密码不能为空');
+					return;
+				}
+				if (pwd1 !== pwd2) {
+					alert('两次密码不一致');
+					return;
+				}
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function() {
+					if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+						var json = eval('(' + xmlhttp.responseText + ')');
+						if (json.res) {
+							alert('注册成功');
+							window.location.href = '/';
+						} else if (json.info === "repeat") {
+							alert('用户名重复');
+						} else {
+							alert('未知错误，请联系项目经理');
+						}
+					}
+				}
+				xmlhttp.open('POST', '/users/register', true);
+				xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+				xmlhttp.send('user=' + encodeURIComponent(user) + '&pwd=' + encodeURIComponent(pwd1) + '&type=1');
+			}
+		</script>
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+  	<form action='' onsubmit='return false'>
+			<table>
+				<tr>
+					<td>用户名：</td><td><input id='name' type='text' maxlength='32'></td>
+				</tr>
+				<tr>
+					<td>密码：</td><td><input id='pwd' type='password' maxlength='32'></td>
+				</tr>
+				<tr>
+					<td>重复密码：</td><td><input id='repwd' type='password' maxlength='32'></td>
+				</tr>
+				<tr>
+					<td><input type='submit' value='提交' onclick='ajax()'></td>
+					<td><a href='/manager/login'>登录</a></td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>
