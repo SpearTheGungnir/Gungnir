@@ -26,7 +26,7 @@
 			</table>
 		</form>
 		<form action='/restaurants/upload' method='POST' enctype='multipart/form-data'>
-			<input type='file' name='upload'/>
+			<input type='file' <%= disabled %> name='upload'/>
 			<input type='submit' value='上传图片' <%= disabled %>/>
 		</form>
 	</body>
