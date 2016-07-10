@@ -225,7 +225,7 @@ router.post('/upload', function(req, res, next) {
 	form.parse(req, function(err, fields,files) {
 		if (err) {
 			console.log(new Date() + ': [upload] - ' + err);
-			res.end();
+			res.render('result', json);
 			return;
 		}
 		var ext = '';
@@ -243,19 +243,19 @@ router.post('/upload', function(req, res, next) {
 				ext = 'png';
 				break;
 			default:
-				res.end();
+				res.render('result', json);
 				return;
 		}
 		var query = 'select id from restaurants where owner = ? limit 1';
 		mysql.query(query, [req.session.userid], function(err, rows, fields) {
 			if (err) {
 				console.log(new Date() + ': [mysql-query] - ' + err);
-				res.end();
+				res.render('result', json);
 				return;
 			}
 			if (rows.length === 0) {
 				console.log(new Date() + ': [upload] - bad user')
-				res.end();
+				res.render('result', json);
 				return;
 			}
 			var uid = rows[0].id;
@@ -269,9 +269,11 @@ router.post('/upload', function(req, res, next) {
 			mysql.query(query, ['/img/restaurants/' + newName, uid], function(err, rows, fields) {
 				if (err) {
 					console.log(new Date() + ': [mysql-query] - ' + err);
-					res.end();
-				} else 
-					res.end();
+					res.render('result', json);
+				} else {
+					json.result = '成功了';
+					res.render('result', json);
+				}
 			})
 		});
 	});
