@@ -81,8 +81,10 @@ router.get('/add', function(req, res, next) {
 		} else {
 			console.log(new Date() + ': [restaurant-add] - Succeeded!');
 			//res.json({res : true, info : ''});
+			var tmp = json;
 			json.result = '成功了';
-      res.render('result', json);
+			res.render('result', json);
+			json.result = '出错了';
 		}
 	});
 });
@@ -210,7 +212,8 @@ router.get('/update', function(req, res, next) {
 		console.log(new Date() + ': [update-restaurant] - Succeeded!');
 		//res.json({res : true, info : ''});
 		json.result = '成功了';
-		res.render('result', json);
+    res.render('result', json);
+		json.result = '失败了';
 	});
 });
 
@@ -273,6 +276,7 @@ router.post('/upload', function(req, res, next) {
 				} else {
 					json.result = '成功了';
 					res.render('result', json);
+					json.result = '出错了';
 				}
 			})
 		});

@@ -29,5 +29,8 @@
 			<input type='file' <%= disabled %> name='upload'/>
 			<input type='submit' value='上传图片' <%= disabled %>/>
 		</form>
+		<% if (disabled === "") {%>
+		<a href='/manager/homepage/foods/list'>饭菜中心</a>
+		<% } %>
 	</body>
 </html>
