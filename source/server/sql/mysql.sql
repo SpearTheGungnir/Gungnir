@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.12, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.5.49, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: gungnir
 -- ------------------------------------------------------
--- Server version	5.7.12-0ubuntu1.1
+-- Server version	5.5.49-0ubuntu0.14.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -35,7 +35,7 @@ CREATE TABLE `restaurants` (
   UNIQUE KEY `owner_2` (`owner`),
   KEY `owner` (`owner`),
   CONSTRAINT `restaurants_ibfk_1` FOREIGN KEY (`owner`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +44,7 @@ CREATE TABLE `restaurants` (
 
 LOCK TABLES `restaurants` WRITE;
 /*!40000 ALTER TABLE `restaurants` DISABLE KEYS */;
-INSERT INTO `restaurants` VALUES (1,'KFC',1,'BJTU','4008-517-517','cheap',NULL,'2016-07-08 15:00:36');
+INSERT INTO `restaurants` VALUES (1,'KFC',1,'BJTU','4008-517-517','cheap','/img/restaurants/1.jpg','2016-07-08 15:00:36'),(3,'r1',6,'test','test','test',NULL,'2016-07-09 21:50:40'),(4,'gsgsbgydsb',8,'1','1','1','/img/restaurants/4.jpg','2016-07-10 15:05:00');
 /*!40000 ALTER TABLE `restaurants` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -64,7 +64,7 @@ CREATE TABLE `rmark` (
   KEY `rid` (`rid`),
   CONSTRAINT `rmark_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `rmark_ibfk_2` FOREIGN KEY (`rid`) REFERENCES `restaurants` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -92,7 +92,7 @@ CREATE TABLE `users` (
   `time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uname` (`uname`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,7 +101,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'233','233',2,'2016-07-07 16:26:07'),(3,'aaaa','aaa',0,'2016-07-08 17:19:22'),(4,'aaaaa','aaa',0,'2016-07-08 17:19:24'),(5,'aaaaaa','aaa',1,'2016-07-08 17:19:28'),(6,'mg','ok',1,'2016-07-09 10:19:12');
+INSERT INTO `users` VALUES (1,'233','233',2,'2016-07-07 16:26:07'),(3,'aaaa','aaa',0,'2016-07-08 17:19:22'),(4,'aaaaa','aaa',0,'2016-07-08 17:19:24'),(5,'aaaaaa','aaa',1,'2016-07-08 17:19:28'),(6,'mg','ok',1,'2016-07-09 10:19:12'),(7,'gejian','gejian',1,'2016-07-10 14:56:57'),(8,'zhang','zhang',1,'2016-07-10 15:04:23');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -114,4 +114,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-07-09 11:56:44
+-- Dump completed on 2016-07-11  9:33:03
