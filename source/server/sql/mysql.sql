@@ -16,6 +16,39 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `foods`
+--
+
+DROP TABLE IF EXISTS `foods`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `foods` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fname` varchar(32) NOT NULL,
+  `owner` int(11) DEFAULT NULL,
+  `origin` varchar(64) DEFAULT NULL,
+  `price` varchar(16) DEFAULT NULL,
+  `feature` varchar(128) DEFAULT NULL,
+  `photo` varchar(255) DEFAULT NULL,
+  `special` tinyint(1) DEFAULT '0',
+  `time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `owner` (`owner`),
+  CONSTRAINT `foods_ibfk_1` FOREIGN KEY (`owner`) REFERENCES `restaurants` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `foods`
+--
+
+LOCK TABLES `foods` WRITE;
+/*!40000 ALTER TABLE `foods` DISABLE KEYS */;
+INSERT INTO `foods` VALUES (1,'lemon123',1,'fruit','$199','good','/img/foods/1.jpg',0,'2016-07-11 15:20:26'),(3,'orange',1,'fruit','$599','good!!',NULL,1,'2016-07-11 15:21:25'),(4,'gejian',1,'gejian','gejian','gejian',NULL,0,'2016-07-11 20:28:24');
+/*!40000 ALTER TABLE `foods` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `moments`
 --
 
@@ -143,4 +176,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-07-11 10:46:46
+-- Dump completed on 2016-07-11 21:37:10

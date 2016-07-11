@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>Welcome to <%= title %></h1>
+		<table>
+			<tr>
+				<th style='width:20px'>No</th><th>name</th><th>origin</th><th>price</th><th>feature</th><th></th><th></th><th></th>
+			</tr>
+			<% for (var i = 0; i < list.length; ++i) { %>
+				<form action='/manager/homepage/foods/change/update' method='GET'>
+					<input type='hidden' name='fid' value='<%= list[i].id %>'/>
+					<tr>
+						<td><%= i %></td>
+						<td><input type='text' name='name' value='<%= list[i].fname %>' maxlength='32'/></td>
+						<td><input type='text' name='origin' value='<%= list[i].origin %>' maxlength='64'/></td>
+						<td><input type='text' name='price' value='<%= list[i].price %>' maxlength='16'/></td>
+						<td><input type='text' name='feature' value='<%= list[i].feature %>' maxlength='128'/></td>
+						<td><input type='submit' value='提交'/></td>
+						<td><button type='button' onclick='window.location.href="/manager/homepage/foods/change/special?fid=" + <%= list[i].id %>' <% if (list[i].special) { %>disabled='true'<% } %>>Special</button></td>
+						<td><button type='button' onclick='window.location.href="/manager/homepage/foods/change/delete?fid=" + <%= list[i].id %>' >删除</button></td>
+					</tr>
+				</form>
+				<tr>
+					<td colspan='4'></td>
+					<td colspan='0'>
+						<form action='/manager/homepage/foods/change/upload' method='POST' enctype='multipart/form-data'>
+						<input type='hidden' name='fid' value='<%= list[i].id %>'/>
+						<input type='file' name='upload' accept='image/*'/>
+						<input type='submit' value='上传图片'/>
+						</form>
+					</td>
+				</tr>	
+			<% } %>
+		<form action='/manager/homepage/foods/add' method='GET'>
+		<table>
+			<tr>
+				<td style='width:20px'>加菜</td>
+				<td><input type='text' name='name' maxlength='32'/></td>
+				<td><input type='text' name='origin' maxlength='64'/></td>
+				<td><input type='text' name='price' maxlength='16'/></td>
+				<td><input type='text' name='feature' maxlength='128'/></td>
+				<td><input type='submit' value='服务员！'/></td>
+			</tr>
+		</table>
+		</form>
+  </body>
+</html>
