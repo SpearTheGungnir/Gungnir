@@ -10,7 +10,7 @@ var json=require('../json/restaurant.json');
 router.get('/', function(req, res, next) {
 	var page = parseInt(req.query.page);
 	var numPage = 10;
-	var query = 'select restaurants.*, ifnull(photo, \'img/restaurants/default.jpeg\') as photoaddr, ifnull(avg(score), 5.0) as avg from restaurants left join rmark on id = rid group by id';
+	var query = 'select restaurants.*, ifnull(photo, \'/img/restaurants/default.jpeg\') as photoaddr, ifnull(avg(score), 5.0) as avg from restaurants left join rmark on id = rid group by id';
 	if (!isNaN(page) && page >= 0) {
 		query += ' limit ' + (page * numPage) + ',' + numPage;
 	}
