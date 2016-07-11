@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
 	var numOfPage = 10;
 	var page = parseInt(req.query.page);
 	if (!isNaN(page) && page >= 0) {
-		query += ' limit ' + numOfPage * page + ',' + numOfOage;
+		query += ' limit ' + numOfPage * page + ',' + numOfPage;
 	}
 	console.log(new Date() + ': [mysql-query] - ' + query);
 	mysql.query(query, function(err, rows, fields) {
