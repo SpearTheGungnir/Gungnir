@@ -28,7 +28,6 @@ router.get('/', function(req, res, next) {
 });
 
 
-
 /* upload step1 */
 router.post('/uploadpic', function(req, res, next) {
 
