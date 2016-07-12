@@ -38,7 +38,7 @@ router.post('/uploadpic', function(req, res, next) {
 	form.keepExtensions = true;
 	form.maxFieldsSize = 2 * 1024 * 1024;
     
-	
+	console.log('23');
 	form.parse(req, function(err, fields, files) {              //解析表单
 		if (err) {
 			console.log(new Date() + ': [moment-add] - ' + err);
