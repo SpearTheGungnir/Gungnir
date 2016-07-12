@@ -35,7 +35,7 @@ CREATE TABLE `foods` (
   PRIMARY KEY (`id`),
   KEY `owner` (`owner`),
   CONSTRAINT `foods_ibfk_1` FOREIGN KEY (`owner`) REFERENCES `restaurants` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +44,6 @@ CREATE TABLE `foods` (
 
 LOCK TABLES `foods` WRITE;
 /*!40000 ALTER TABLE `foods` DISABLE KEYS */;
-INSERT INTO `foods` VALUES (1,'lemon123',1,'fruit','$199','good','/img/foods/1.jpg',0,'2016-07-11 15:20:26'),(3,'orange',1,'fruit','$599','good!!',NULL,1,'2016-07-11 15:21:25'),(4,'gejian',1,'gejian','gejian','gejian',NULL,0,'2016-07-11 20:28:24');
 /*!40000 ALTER TABLE `foods` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -97,7 +96,7 @@ CREATE TABLE `restaurants` (
   UNIQUE KEY `owner_2` (`owner`),
   KEY `owner` (`owner`),
   CONSTRAINT `restaurants_ibfk_1` FOREIGN KEY (`owner`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -106,7 +105,6 @@ CREATE TABLE `restaurants` (
 
 LOCK TABLES `restaurants` WRITE;
 /*!40000 ALTER TABLE `restaurants` DISABLE KEYS */;
-INSERT INTO `restaurants` VALUES (1,'KFC',1,'BJTU','4008-517-517','cheap','/img/restaurants/1.jpg','2016-07-08 15:00:36'),(3,'r1',6,'test','test','test',NULL,'2016-07-09 21:50:40'),(4,'gsgsbgydsb',8,'1','1','1','/img/restaurants/4.jpg','2016-07-10 15:05:00');
 /*!40000 ALTER TABLE `restaurants` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -135,7 +133,6 @@ CREATE TABLE `rmark` (
 
 LOCK TABLES `rmark` WRITE;
 /*!40000 ALTER TABLE `rmark` DISABLE KEYS */;
-INSERT INTO `rmark` VALUES (1,1,4,'2016-07-09 11:07:28'),(3,1,2,'2016-07-09 11:07:39');
 /*!40000 ALTER TABLE `rmark` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -163,7 +160,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'233','233',2,'2016-07-07 16:26:07'),(3,'aaaa','aaa',0,'2016-07-08 17:19:22'),(4,'aaaaa','aaa',0,'2016-07-08 17:19:24'),(5,'aaaaaa','aaa',1,'2016-07-08 17:19:28'),(6,'mg','ok',1,'2016-07-09 10:19:12'),(7,'gejian','gejian',1,'2016-07-10 14:56:57'),(8,'zhang','zhang',1,'2016-07-10 15:04:23');
+INSERT INTO `users` VALUES (1,'233','233',2,'2016-07-07 16:26:07');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -176,4 +173,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-07-11 21:37:10
+-- Dump completed on 2016-07-12 10:36:11

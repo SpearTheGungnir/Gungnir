@@ -5,10 +5,10 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1>Welcome to <%= title %></h1>
+    <h1>Welcome to <%= title %></h1> <a href='/manager/homepage/restaurant'>手动再见</a>
 		<table>
 			<tr>
-				<th style='width:20px'>No</th><th>name</th><th>origin</th><th>price</th><th>feature</th><th></th><th></th><th></th>
+				<th>No</th><th>name</th><th>origin</th><th>price</th><th>feature</th><th></th><th></th><th></th>
 			</tr>
 			<% for (var i = 0; i < list.length; ++i) { %>
 				<form action='/manager/homepage/foods/change/update' method='GET'>
@@ -26,7 +26,7 @@
 				</form>
 				<tr>
 					<td colspan='4'></td>
-					<td colspan='0'>
+					<td colspan='3'>
 						<form action='/manager/homepage/foods/change/upload' method='POST' enctype='multipart/form-data'>
 						<input type='hidden' name='fid' value='<%= list[i].id %>'/>
 						<input type='file' name='upload' accept='image/*'/>
@@ -34,11 +34,10 @@
 						</form>
 					</td>
 				</tr>	
-			<% } %>
+		<% } %>
 		<form action='/manager/homepage/foods/add' method='GET'>
-		<table>
 			<tr>
-				<td style='width:20px'>加菜</td>
+				<td>加菜</td>
 				<td><input type='text' name='name' maxlength='32'/></td>
 				<td><input type='text' name='origin' maxlength='64'/></td>
 				<td><input type='text' name='price' maxlength='16'/></td>

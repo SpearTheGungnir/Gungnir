@@ -102,9 +102,9 @@ router.get('/delete', function(req, res, next) {
 		res.json({res : false, info : 'logout'});
 		return;
 	}
-  var query = 'select type from users where id = ?';
+  var query = 'select photo from users u join restaurants r on u.id = r.owner where r.id = ? and (? = 2 or u.id = ?) limit 1';
 	console.log(new Date() + ': [mysql-query] - ' + query);
-	mysql.query(query, [loginid], function (err, rows, fields) { //删除操作的用户是否存在且有权限
+	mysql.query(query, [req.query.rid, req.session.type, loginid], function (err, rows, fields) { //删除操作的用户是否存在且有权限
 	  if (err) {
     	console.log(new Date() + ': [mysql-query] - ' + err);
 			res.json({res : false, info : 'query fail'});
@@ -115,31 +115,34 @@ router.get('/delete', function(req, res, next) {
 			res.json({res : false, info : 'bad user'});
 			return;
 		}
-		var type = rows[0].type;
-		if (type == 2) {  // has power
-			next();
-		} else {
-			console.log(new Date() + ': [delete-restaurant] - no power');
-			res.json({res : false, info : 'no power'});
-		}
+		req.rphoto = rows[0].photo;
+		next();
 	});
 });
 
 /* DELETE restaurant - step 2 */
 router.get('/delete', function(req, res, next) {
-	var query = 'select 1 from restaurants where id = ?';
+	var query = 'select photo from foods where owner = ?';
 	console.log(new Date() + ': [mysql-query] - ' + query);
-	mysql.query(query, [req.query.rid], function(err, rows, fields) { //被删除餐馆是否存在
+	mysql.query(query, [req.query.rid], function(err, rows, fields) { //被删除餐馆的菜
     if (err) {
     	console.log(new Date() + ': [mysql-query] - ' + err);
 			res.json({res : false, info : 'query fail'});
 			return;
 		}
-		if (rows.length === 0) {
-			console.log(new Date() + ': [delete-restaurant] - restaurant doesn\'t exist');
-			res.json({res : false, info : 'bad restaurant'});
-			return;
-		}
+		var photoPath = path.join(__dirname, '..', 'public');
+		for (var i = 0; i < rows.length; ++i)
+			if (rows[i].photo)
+				fs.unlink(photoPath + rows[i].photo, function(err) {
+					if (err) {
+						console.log(new Date() + ': [delete-file] - ' + err);
+					}
+				});
+		fs.unlink(photoPath + req.rphoto, function(err) {
+			if (err) {
+				console.log(new Date() + ': [delete-file] - ' + err);
+			}
+		});
 		next();
 	});
 });

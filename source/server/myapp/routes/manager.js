@@ -54,9 +54,9 @@ router.get('/homepage/restaurant', function(req, res, next) {
 			console.log(new Date() + '[mysql-query] - Succeeded!');
 		}
 	    if(rows.length) {
-    		res.render('restaurant', { title: '餐厅管理系统', action: 'update', rname: rows[0].rname, addr: rows[0].addr, tel: rows[0].tel, feature: rows[0].feature, disabled: '' });	
+    		res.render('restaurant', { title: '餐厅管理系统', action: 'update', rname: rows[0].rname, addr: rows[0].addr, tel: rows[0].tel, feature: rows[0].feature, disabled: '', rid: rows[0].id });	
 		} else {
-			res.render('restaurant', { title: '餐厅管理系统', action: 'add', rname: '', addr: '', tel: '', feature: '', disabled: 'disabled = \'disabled\'' });
+			res.render('restaurant', { title: '餐厅管理系统', action: 'add', rname: '', addr: '', tel: '', feature: '', disabled: 'disabled = \'disabled\'', rid: 0 });
 		}	
 		//res.json(rows);
 	});
