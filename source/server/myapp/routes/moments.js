@@ -34,7 +34,7 @@ router.post('/uploadpic', function(req, res, next) {
 
 	var form = new formidable.IncomingForm();
 	form.encoding = 'utf-8';
-	form.uploadDir = path.join(__dirname, '..', 'public/uploads/images'); 
+	form.uploadDir = path.join(__dirname, '..', '/uploads'); 
 	form.keepExtensions = true;
 	form.maxFieldsSize = 2 * 1024 * 1024;
     
