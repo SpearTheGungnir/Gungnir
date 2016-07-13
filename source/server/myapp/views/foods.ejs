@@ -6,9 +6,9 @@
   </head>
   <body>
     <h1>Welcome to <%= title %></h1> <a href='/manager/homepage/restaurant'>手动再见</a>
-		<table>
+		<table style='width: 100%'>
 			<tr>
-				<th>No</th><th>name</th><th>origin</th><th>price</th><th>feature</th><th></th><th></th><th></th>
+				<th>No</th><th>name</th><th>origin</th><th style='width: 30px'>price</th><th>feature</th><th colspan='4'>operation</th>
 			</tr>
 			<% for (var i = 0; i < list.length; ++i) { %>
 				<form action='/manager/homepage/foods/change/update' method='GET'>
@@ -19,21 +19,12 @@
 						<td><input type='text' name='origin' value='<%= list[i].origin %>' maxlength='64'/></td>
 						<td><input type='text' name='price' value='<%= list[i].price %>' maxlength='16'/></td>
 						<td><input type='text' name='feature' value='<%= list[i].feature %>' maxlength='128'/></td>
-						<td><input type='submit' value='提交'/></td>
-						<td><button type='button' onclick='window.location.href="/manager/homepage/foods/change/special?fid=" + <%= list[i].id %>' <% if (list[i].special) { %>disabled='true'<% } %>>Special</button></td>
-						<td><button type='button' onclick='window.location.href="/manager/homepage/foods/change/delete?fid=" + <%= list[i].id %>' >删除</button></td>
+						<td><input type='submit' value='提交'/>
+						<button type='button' onclick='window.location.href="/manager/homepage/foods/change/special?fid=" + <%= list[i].id %>' <% if (list[i].special) { %>disabled='true'<% } %>>设为特色</button>
+						<button type='button' onclick='window.location.href="/manager/homepage/foods/change/delete?fid=" + <%= list[i].id %>' >删除</button>
+						<button type='button' onclick='window.location.href = "/manager/homepage/foods/change/foodpic?fid=" + <%= list[i].id %>'>上传图片</button></td>
 					</tr>
 				</form>
-				<tr>
-					<td colspan='4'></td>
-					<td colspan='3'>
-						<form action='/manager/homepage/foods/change/upload' method='POST' enctype='multipart/form-data'>
-						<input type='hidden' name='fid' value='<%= list[i].id %>'/>
-						<input type='file' name='upload' accept='image/*'/>
-						<input type='submit' value='上传图片'/>
-						</form>
-					</td>
-				</tr>	
 		<% } %>
 		<form action='/manager/homepage/foods/add' method='GET'>
 			<tr>
@@ -42,7 +33,7 @@
 				<td><input type='text' name='origin' maxlength='64'/></td>
 				<td><input type='text' name='price' maxlength='16'/></td>
 				<td><input type='text' name='feature' maxlength='128'/></td>
-				<td><input type='submit' value='服务员！'/></td>
+				<td colspan='4'><input type='submit' value='服务员！'/></td>
 			</tr>
 		</table>
 		</form>

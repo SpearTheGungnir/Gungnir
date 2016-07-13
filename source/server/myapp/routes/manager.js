@@ -227,6 +227,15 @@ router.get('/homepage/foods/add', function(req, res, next) {
 	});
 });
 
+router.get('/homepage/foods/change/foodpic', function(req, res, next) {
+	var fid = parseInt(req.query.fid);
+	if (isNaN(fid) || fid <= 0) {
+		res.render('result', foodjson);
+		return;
+	}
+	res.render('foodpic', {fid : fid});
+});
+
 /* UPLOAD food */
 router.post('/homepage/foods/change/upload', function(req, res, next) {
 	var form = new formidable.IncomingForm();

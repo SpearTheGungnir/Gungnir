@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel='stylesheet' href='/stylesheets/style.css' />
+	</head>
+	<body>
+		<form action='/manager/homepage/foods/change/upload' method='POST' enctype='multipart/form-data'>
+		<table>
+			<tr><td>
+			<input type='hidden' name='fid' value='<%= fid %>'/>
+			<input type='file' name='upload' accept='image/*'/>
+			</td></tr>
+			<tr><td>
+			<input type='submit' value='上传图片'/>
+			</td></tr>
+			<tr><td><button type='button' onclick='window.location.href="/manager/homepage/foods/list"'>返回</button></td></tr>
+		</table>
+		</form>
+	</body>
+</html>
+
