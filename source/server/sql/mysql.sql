@@ -16,6 +16,38 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `fcomments`
+--
+
+DROP TABLE IF EXISTS `fcomments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `fcomments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) DEFAULT NULL,
+  `fid` int(11) DEFAULT NULL,
+  `score` int(11) NOT NULL,
+  `comment` varchar(128) DEFAULT NULL,
+  `time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uid` (`uid`,`fid`),
+  KEY `fid` (`fid`),
+  CONSTRAINT `fcomments_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fcomments_ibfk_2` FOREIGN KEY (`fid`) REFERENCES `foods` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `fcomments`
+--
+
+LOCK TABLES `fcomments` WRITE;
+/*!40000 ALTER TABLE `fcomments` DISABLE KEYS */;
+INSERT INTO `fcomments` VALUES (2,1,1,4,'hhh','2016-07-13 14:20:59'),(4,2,1,4,'hhhh','2016-07-13 14:21:47');
+/*!40000 ALTER TABLE `fcomments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `foods`
 --
 
@@ -35,7 +67,7 @@ CREATE TABLE `foods` (
   PRIMARY KEY (`id`),
   KEY `owner` (`owner`),
   CONSTRAINT `foods_ibfk_1` FOREIGN KEY (`owner`) REFERENCES `restaurants` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,6 +76,7 @@ CREATE TABLE `foods` (
 
 LOCK TABLES `foods` WRITE;
 /*!40000 ALTER TABLE `foods` DISABLE KEYS */;
+INSERT INTO `foods` VALUES (1,'e',8,'e','e','e',NULL,0,'2016-07-13 14:17:09'),(2,'22',8,'22','22','22',NULL,1,'2016-07-13 14:21:13');
 /*!40000 ALTER TABLE `foods` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -146,7 +179,7 @@ DROP TABLE IF EXISTS `rmark`;
 CREATE TABLE `rmark` (
   `uid` int(11) NOT NULL,
   `rid` int(11) NOT NULL,
-  `score` int(11) NOT NULL DEFAULT '5',
+  `score` int(11) NOT NULL,
   `time` datetime DEFAULT NULL,
   PRIMARY KEY (`uid`,`rid`),
   KEY `rid` (`rid`),
@@ -201,4 +234,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-07-13 11:11:48
+-- Dump completed on 2016-07-13 15:18:09
