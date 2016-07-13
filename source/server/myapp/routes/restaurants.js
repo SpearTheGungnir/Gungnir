@@ -2,9 +2,9 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('../connect/mysql');
 var formidable = require('formidable');
-var fs=require('fs');
-var path=require('path');
-var json=require('../json/restaurant.json');
+var fs = require('fs');
+var path = require('path');
+var json = require('../json/restaurant.json');
 
 /* GET resturants listing */
 router.get('/', function(req, res, next) {
@@ -122,7 +122,7 @@ router.get('/delete', function(req, res, next) {
 
 /* DELETE restaurant - step 2 */
 router.get('/delete', function(req, res, next) {
-	var query = 'select photo from foods where owner = ?';
+	var query = 'select id, photo from foods where owner = ?';
 	console.log(new Date() + ': [mysql-query] - ' + query);
 	mysql.query(query, [req.query.rid], function(err, rows, fields) { //被删除餐馆的菜
     if (err) {
@@ -130,19 +130,35 @@ router.get('/delete', function(req, res, next) {
 			res.json({res : false, info : 'query fail'});
 			return;
 		}
-		var photoPath = path.join(__dirname, '..', 'public');
+		console.log(new Date() + ': [mysql-query] - Succeeded! ' + rows.length);
+		var foodPath = path.join(__dirname, '..', '..', 'public/img/foods/');
+		// 两种格式png和jpg都尝试去删除
 		for (var i = 0; i < rows.length; ++i)
-			if (rows[i].photo)
-				fs.unlink(photoPath + rows[i].photo, function(err) {
+			if (rows[i].photo) {
+				fs.unlink(foodPath + rows[i].id + '.jpg', function(err) {
 					if (err) {
 						console.log(new Date() + ': [delete-file] - ' + err);
 					}
 				});
-		fs.unlink(photoPath + req.rphoto, function(err) {
-			if (err) {
-				console.log(new Date() + ': [delete-file] - ' + err);
+				fs.unlink(foodPath + rows[i].id + '.png', function(err) {
+					if (err) {
+						console.log(new Date() + ': [delete-file] - ' + err);
+					}
+				});
 			}
-		});
+		var restaurantPath = path.join(__dirname, '..', '..', 'public/img/restaurants/');
+		if (req.rphoto) {
+			fs.unlink(restaurantPath + req.query.rid + '.jpg', function(err) {
+				if (err) {
+					console.log(new Date() + ': [delete-file] - ' + err);
+				}
+			});
+			fs.unlink(restaurantPath + req.query.rid + '.png', function(err) {
+				if (err) {
+					console.log(new Date() + ': [delete-file] - ' + err);
+				}
+			});
+		}
 		next();
 	});
 });
