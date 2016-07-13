@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
 	var query = 'select f.*, ifnull(f.photo, \'/img/foods/default.jpeg\') as photoaddr, ifnull(avg(c.score), 5.0) as avg from foods f left join fcomments c on f.id = c.fid';
 	if (!isNaN(id) && id >= 0)
 		query += ' where owner = ' + id;
-	query += ' group by f.id order by special desc';
+	query += ' group by f.id order by special desc, id';
 	if (!isNaN(page) && page >= 0) {
 		query += ' limit ' + (page * numPage) + ',' + numPage;
 	}
@@ -28,6 +28,22 @@ router.get('/', function(req, res, next) {
 	});
 });
 
-/*  */
+/* GET comments list */
+router.get('/comments', function(req, res, next) {
+	query = 'select c.*, u.uname from fcomments c, users u where c.uid = u.id';
+	var fid = parseInt(req.query.fid);
+	if (!isNaN(fid) && fid > 0)
+		query += ' and c.fid = ' + fid;
+	console.log(new Date() + ': [mysql-query] - ' + query);
+	mysql.query(query, function(err, rows, fields) {
+		if (err)
+			console.log(new Date() + ': [mysql-query] - ' + err);
+		else
+			console.log(new Date() + ': [mysql-query] - Succeeded!');
+		res.json(rows);
+	});
+});
+
+
 
 module.exports = router;
