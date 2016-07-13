@@ -35,7 +35,7 @@ CREATE TABLE `foods` (
   PRIMARY KEY (`id`),
   KEY `owner` (`owner`),
   CONSTRAINT `foods_ibfk_1` FOREIGN KEY (`owner`) REFERENCES `restaurants` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,6 +45,33 @@ CREATE TABLE `foods` (
 LOCK TABLES `foods` WRITE;
 /*!40000 ALTER TABLE `foods` DISABLE KEYS */;
 /*!40000 ALTER TABLE `foods` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `likes`
+--
+
+DROP TABLE IF EXISTS `likes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `likes` (
+  `uid` int(11) NOT NULL,
+  `mid` int(11) NOT NULL,
+  PRIMARY KEY (`uid`,`mid`),
+  KEY `mid` (`mid`),
+  CONSTRAINT `likes_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `likes_ibfk_2` FOREIGN KEY (`mid`) REFERENCES `moments` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `likes`
+--
+
+LOCK TABLES `likes` WRITE;
+/*!40000 ALTER TABLE `likes` DISABLE KEYS */;
+INSERT INTO `likes` VALUES (1,1),(2,1);
+/*!40000 ALTER TABLE `likes` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -63,7 +90,7 @@ CREATE TABLE `moments` (
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
   CONSTRAINT `moments_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -72,7 +99,7 @@ CREATE TABLE `moments` (
 
 LOCK TABLES `moments` WRITE;
 /*!40000 ALTER TABLE `moments` DISABLE KEYS */;
-INSERT INTO `moments` VALUES (1,1,'好吃',NULL,'2016-07-11 18:19:11');
+INSERT INTO `moments` VALUES (1,1,'好吃',NULL,'2016-07-11 18:19:11'),(2,1,'233',NULL,'2016-07-13 10:15:48');
 /*!40000 ALTER TABLE `moments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -96,7 +123,7 @@ CREATE TABLE `restaurants` (
   UNIQUE KEY `owner_2` (`owner`),
   KEY `owner` (`owner`),
   CONSTRAINT `restaurants_ibfk_1` FOREIGN KEY (`owner`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -105,6 +132,7 @@ CREATE TABLE `restaurants` (
 
 LOCK TABLES `restaurants` WRITE;
 /*!40000 ALTER TABLE `restaurants` DISABLE KEYS */;
+INSERT INTO `restaurants` VALUES (8,'1',1,'1','1','1','/img/restaurants/8.jpg','2016-07-12 10:52:45'),(9,'admin',2,'admin','admin','admin',NULL,'2016-07-13 10:00:17');
 /*!40000 ALTER TABLE `restaurants` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -151,7 +179,7 @@ CREATE TABLE `users` (
   `time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uname` (`uname`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -160,7 +188,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'233','233',2,'2016-07-07 16:26:07');
+INSERT INTO `users` VALUES (1,'233','233',2,'2016-07-07 16:26:07'),(2,'admin','admin',1,'2016-07-13 10:00:08');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -173,4 +201,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-07-12 10:36:11
+-- Dump completed on 2016-07-13 11:11:48

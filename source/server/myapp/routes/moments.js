@@ -6,17 +6,20 @@ var fs=require('fs');
 var path=require('path');
 
 router.get('/', function(req, res, next) {
-	var query = 'select m.id, uid, uname, comment, photo as photoaddr, m.time from moments m, users u where uid = u.id' ;
-	var uid = parseInt(req.query.user);
+	var query = 'select m.id, m.uid, uname, comment, photo, m.time, if(l2.uid is null, false, true) isliked, sum(if(l1.uid is null, 0, 1)) as cnt from moments m left join likes l1 on m.id = l1.mid join users u on m.uid = u.id left join likes l2 on l2.uid = ? and l2.mid = m.id ';
+	var uid = parseInt(req.query.uid);
 	if (!isNaN(uid) && uid >= 0)
-		query += ' and uid = ' + uid;
+		query += ' where m.uid = ' + uid;
+	query += ' group by(m.id) order by m.time desc';
 	var numOfPage = 10;
 	var page = parseInt(req.query.page);
 	if (!isNaN(page) && page >= 0) {
 		query += ' limit ' + numOfPage * page + ',' + numOfPage;
 	}
 	console.log(new Date() + ': [mysql-query] - ' + query);
-	mysql.query(query, function(err, rows, fields) {
+	var lid = parseInt(req.query.lid);
+	if (isNaN(lid) || lid <= 0) lid = 0;
+	mysql.query(query, [lid], function(err, rows, fields) {
 		if (err) {
 			console.log(new Date() + ': [mysql-query] - ' + err);
 			res.json({res : false, info : 'query fail'});
