@@ -107,7 +107,7 @@ router.post('/uploadpic', function(req, res, next) {
 		
     //重命名
     var newName = req.mid + '.' + ext;
-	var distPath = path.join(__dirname, '..', 'public/img/moments/');
+		var distPath = path.join(__dirname, '..', '..', 'public/img/moments/');
     fs.renameSync(req.files.upload.path, distPath + newName);
     console.log(new Date() + ': [add-moment-photo-toDist]- Succeeded! - ' + newName);
 

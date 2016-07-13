@@ -266,7 +266,7 @@ router.post('/upload', function(req, res, next) {
 			}
 			var uid = rows[0].id;
 			var newName = uid + '.' + ext;
-			var distPath = path.join(__dirname, '..', 'public/img/restaurants/');
+			var distPath = path.join(__dirname, '..', '..', 'public/img/restaurants/');
 			// mv file
 			fs.renameSync(files.upload.path, distPath + newName);
 			console.log(new Date() + ': [upload] - Succeeded! - ' + newName);

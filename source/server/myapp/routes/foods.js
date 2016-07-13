@@ -10,9 +10,10 @@ router.get('/', function(req, res, next) {
 	var page = parseInt(req.query.page);	
 	var id = parseInt(req.query.rid);	
 	var numPage = 10;
-	var query = 'select *, ifnull(photo, \'/img/foods/default.jpeg\') as photoaddr from foods';
+	var query = 'select f.*, ifnull(f.photo, \'/img/foods/default.jpeg\') as photoaddr, ifnull(avg(c.score), 5.0) as avg from foods f left join fcomments c on f.id = c.fid';
 	if (!isNaN(id) && id >= 0)
 		query += ' where owner = ' + id;
+	query += ' group by f.id order by special desc';
 	if (!isNaN(page) && page >= 0) {
 		query += ' limit ' + (page * numPage) + ',' + numPage;
 	}
@@ -26,5 +27,7 @@ router.get('/', function(req, res, next) {
 		res.json(rows);
 	});
 });
+
+/*  */
 
 module.exports = router;

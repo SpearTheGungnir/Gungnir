@@ -266,7 +266,7 @@ router.post('/homepage/foods/change/upload', function(req, res, next) {
 				return;
 		}
 		var newName = fid + '.' + ext;
-		var distPath = path.join(__dirname, '..', 'public/img/foods/');
+		var distPath = path.join(__dirname, '..', '..', 'public/img/foods/');
 		// mv file
 		console.log(new Date() + ': [upload] - Succeeded! - ' + newName);
 		var query = 'update foods set photo = ? where id = ? and owner = ?';
