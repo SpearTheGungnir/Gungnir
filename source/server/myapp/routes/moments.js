@@ -185,4 +185,31 @@ router.get('/delete', function(req, res, next) {
 });
 
 
+/* like */
+router.get('/like', function(req, res, next) {
+	//uid:谁点的赞 mid:点的哪一条朋友圈
+	var query = 'insert into likes values';
+	var uid = parseInt(req.query.uid);
+	if (!isNaN(uid) && uid >= 0) {
+		query += '(' + uid;
+	}
+	var mid = parseInt(req.query.mid);
+	if (!isNaN(mid) && mid >= 0) {
+		query += ', ' + mid + ')';
+	}
+
+	console.log(new Date() + ': [mysql-insert] - ' + query);
+	mysql.query(query, function(err, rows, fields) {
+		if (err) {
+			console.log(new Date() + ': [mysql-insert] - ' + err);
+			res.json({res : false, info : 'insert fail'});
+			return;
+		}
+		console.log(new Date() + ': [mysql-insert] - Succeeded!');
+		res.json({res: true, info: 'like success!'});
+	});
+});
+
+
+
 module.exports = router;
