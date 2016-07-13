@@ -5,6 +5,8 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
 		<script>
 			function deleteajax(rid) {
+				if (!confirm('您确定要倒闭吗？这个操作无法撤回'))
+					return;
 				var xmlhttp = new XMLHttpRequest();
 				xmlhttp.onreadystatechange = function() {
 					if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
