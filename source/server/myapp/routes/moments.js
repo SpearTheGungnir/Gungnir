@@ -125,7 +125,7 @@ router.post('/uploadpic', function(req, res, next) {
 	});
 });
 
-/* delete */
+/* delete step-1 */
 router.get('/delete', function(req, res, next) {
 	//mid, uid
 	if(req.query.mid == null || req.query.mid == "" ||
@@ -152,38 +152,43 @@ router.get('/delete', function(req, res, next) {
 		var deletePic = 'select photo from moments where id = ?';
 		mysql.query(deletePic, req.query.mid, function(err, rows, fields) {
 			if(err) {
-		        console.log(new Date() + ' : [mysql-delete-photo] - ' + err);
-		        res.json({res: false, info: 'delete fail'});
-		        return;
-		    }
-			if(rows[0].photo != null ) {
-				var photoPath = path.join(__dirname, '..', 'public');
-		   		fs.unlink(photoPath + rows[0].photo, function(err) {
-		            if (err) {
-		                console.log(new Date() + ': [delete-file] - ' + err);
-		                res.json({res: false, info: 'delete fail'});
-						return;
-					}
-		        });
-			    console.log(new Date() + ' : [mysql-delete-photo] - success!');
-		    }
-		});
-				
-		//删除数据库中记录
-		var deleteMoment = 'delete from moments where id = ?';
-		mysql.query(deleteMoment, [req.query.mid], function(err, rows, fields) {
-			if(err) {
-		        console.log(new Date() + ' : [mysql-delete] - ' + err);
-		        res.json({res: false, info: 'delete fail'});
-		        return;
-		    }
-			console.log(new Date() + ': [delete-moment] - Succeeded!');
-		    res.json({res : true, info : ''});
+		    console.log(new Date() + ' : [mysql-delete-photo] - ' + err);
+		    res.json({res: false, info: 'delete fail'});
 		    return;
+		  }
+			if(rows[0].photo != null ) {
+				var photoPath = path.join(__dirname, '..', '..', 'public/img/moments/');
+		   	fs.unlink(photoPath + rows[0].id + '.jpg', function(err) {
+		      if (err) {
+		        console.log(new Date() + ': [delete-file] - ' + err);
+					}
+				});
+				fs.unlink(photoPath + rows[0].id + '.png', function(err) {
+		      if (err) {
+		        console.log(new Date() + ': [delete-file] - ' + err);
+					}
+				});
+		  }
+			next();
 		});	
-	})
+	});
 });
 
+/* delete step-2 */
+router.get('/delete', function(req, res, next) {
+	//删除数据库中记录
+	var deleteMoment = 'delete from moments where id = ?';
+	mysql.query(deleteMoment, [req.query.mid], function(err, rows, fields) {
+		if(err) {
+			console.log(new Date() + ' : [mysql-delete] - ' + err);
+			res.json({res: false, info: 'delete fail'});
+			return;
+		}
+		console.log(new Date() + ': [delete-moment] - Succeeded!');
+		res.json({res : true, info : ''});
+		return;
+	});
+});
 
 /* like */
 router.get('/like', function(req, res, next) {
