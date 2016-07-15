@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><%= title %></title>
+		<link rel='stylesheet' href='/stylesheets/style.css'/>
+		<script>
+			function deleteajax(id) {
+				if (!confirm('您确定要删除吗？'))
+					return;
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function() {
+					if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+						var json = eval('(' + xmlhttp.responseText + ')');
+						if (json.res) {
+							alert('删除成功！');
+							window.location.reload(true);
+						} else if (json.info === 'self') {
+							alert('请不要删除自己');
+						} else {
+							alert('删除失败，请联系产品经理');
+						}
+					}
+				}
+				xmlhttp.open('GET', '/foods/delete?fid=' + id);
+				xmlhttp.send();
+			}
+			function search() {
+				var rname = document.getElementById('restaurant').value;
+				var str = '';
+				if (rname.length > 0)
+					str = '?rname=' + encodeURIComponent(rname);
+				window.location.href = '/manager/homepage/sudo/foods/list0' + str;
+			}
+		</script>
+	</head>
+	<body>
+		<h1><%= title %></h1>
+		<h2><a href='/manager/homepage'>返回</a></h2>
+		<p>Filter: <form>食堂：<input id='restaurant' type='text' value='<%= search.rname %>'></input>
+			<input type='submit' value='Go' onclick='search();return false'></input></form></p>
+		<table>
+			<tr>
+				<th>id</th><th>foodName</th><th>ownerId</th><th>restaurantName</th><th>origin</th><th>price</th><th>feature</th><th>special</th><th>time</th><th>operation</th>
+			</tr>
+			<% for(var i = 0; i < list.length; ++i) { %>
+				<tr>
+					<td><%= list[i].id %></td>
+					<td><%= list[i].fname %></td>
+					<td><%= list[i].owner %></td>
+					<td><%= list[i].rname %></td>
+					<td><%= list[i].origin %></td>
+					<td><%= list[i].price %></td>
+          <td><%= list[i].feature %></td>
+					<td><%= list[i].special %></td>
+					<td><%= list[i].time %></td>
+					<td><button type='button' onclick='deleteajax(<%= list[i].id %>)'>删除</button></td>
+				</tr>
+			<% } %>
+		</table>
+		<% if (page > 0) { %>
+			<p><a href='/manager/homepage/sudo/foods/list<%= page - 1 %>?rname=<%= encodeURIComponent(search.rname) %>'>上一页</a></p>
+		<% } %>
+		<% if (list.length > 0) { %>
+			<p><a href='/manager/homepage/sudo/foods/list<%= page + 1 %>?rname=<%= encodeURIComponent(search.rname) %>'>下一页</a></p>
+		<% } %>
+	</body>
+</html>

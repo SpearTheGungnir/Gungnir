@@ -17,5 +17,11 @@
 		<% if (usertype) { %>
 			<a href='/manager/homepage/restaurant'>管理餐厅</a>
 		<% } %>
+		<% if (usertype === 2) {%>
+			<br/><a href='/manager/homepage/sudo/users/list0'>用户管理</a>
+			<br/><a href='/manager/homepage/sudo/restaurants/list0'>餐厅管理</a>
+			<br/><a href='/manager/homepage/sudo/comments/list0'>评论管理</a>
+			<br/><a href='/manager/homepage/sudo/foods/list0'>食物管理</a>
+		<% } %>
   </body>
 </html>

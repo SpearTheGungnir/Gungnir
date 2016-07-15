@@ -120,6 +120,11 @@ router.get('/delete', function(req, res, next) {
 		res.json({res : false, info : 'logout'});
 		return;
 	}
+	if (loginid == req.query.user) {
+		console.log(new Date() + ': [delete-user] - self');
+		res.json({res : false, info : 'self'});
+		return;
+	}
   var query = 'select type from users where id = ?';
 	console.log(new Date() + ': [mysql-query] - ' + query);
 	mysql.query(query, [loginid], function (err, rows, fields) {
