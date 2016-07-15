@@ -16,7 +16,8 @@ function connect() {
   	user : 'gungnir',
   	password : '233',
   	database : 'gungnir',
-  	port : '3306'
+  	port : '3306',
+		useConnectionPoolong: true
 	});
 	connection.connect(handleError);
 	connection.on('error', handleError);
