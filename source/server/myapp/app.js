@@ -12,6 +12,7 @@ var restaurants = require('./routes/restaurants');
 var manager = require('./routes/manager');
 var moments = require('./routes/moments');
 var foods = require('./routes/foods');
+var sudo = require('./routes/sudo');
 
 var app = express();
 
@@ -39,6 +40,7 @@ app.use('/restaurants', restaurants);
 app.use('/manager', manager);
 app.use('/moments', moments);
 app.use('/foods', foods);
+app.use('/manager/homepage/sudo', sudo);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
