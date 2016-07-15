@@ -2,9 +2,10 @@ var mysql = require('mysql');
 
 function handleError(err) {
 	if (err) {
-		connect();
-	} else {
-		console.error(new Date() + ': [handleError] - ' + err);
+		if (err.code === 'PROTOCOL_CONNECTION_LOST')
+			connect();
+		else
+			console.error(err.stack || err);
 	}
 }
 
@@ -17,7 +18,7 @@ function connect() {
   	password : '233',
   	database : 'gungnir',
   	port : '3306',
-		useConnectionPoolong: true
+		useConnectionPoolong : true
 	});
 	connection.connect(handleError);
 	connection.on('error', handleError);
