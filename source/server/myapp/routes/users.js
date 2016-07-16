@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var mysql = require('../connect/mysql');
+var formidable = require('formidable');
+var fs=require('fs');
+var path=require('path');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -173,6 +176,34 @@ router.get('/delete', function(req, res, next) {
 	});
 });
 
+/* DELETE user - step 2.5 */
+router.get('/delete', function(req, res, next) {
+	var query = 'select id, photo from users where id = ?';
+	console.log(new Date() + ': [mysql-query] - ' + query);
+	mysql.query(query, [req.query.user], function(err, rows, fields) {
+        if (err) {
+    	    console.log(new Date() + ': [mysql-query] - ' + err);
+			res.json({res : false, info : 'query fail'});
+			//return;
+		}
+		if (rows[0].photo != null) {
+			var photoPath = path.join(__dirname, '..', '..', 'public/img/users/');
+		   	fs.unlink(photoPath + rows[0].id + '.jpg', function(err) {
+		        if (err) {
+		            console.log(new Date() + ': [delete-file] - ' + err);
+			    }
+			});
+			fs.unlink(photoPath + rows[0].id + '.png', function(err) {
+		        if (err) {
+		            console.log(new Date() + ': [delete-file] - ' + err);
+			    }
+			});
+		}
+		next();
+	});
+});
+
+
 /* DELETE user - step 3 */
 router.get('/delete', function(req, res, next) {
 	var query = 'delete from users where id = ?';
@@ -185,6 +216,109 @@ router.get('/delete', function(req, res, next) {
 		}
 		console.log(new Date() + ': [delete-user] - Succeeded!');
 		res.json({res : true, info : ''});
+	});
+});
+
+
+/* UPLOAD head */
+/* upload step1 */
+router.post('/uploadpic', function(req, res, next) {
+	//uid upload
+	var form = new formidable.IncomingForm();
+	form.encoding = 'utf-8';
+	form.uploadDir = path.join(__dirname, '..', '/uploads'); 
+	form.keepExtensions = true;
+	form.maxFieldsSize = 2 * 1024 * 1024;
+    
+	form.parse(req, function(err, fields, files) {              //解析表单
+		if (err) {
+			console.log(new Date() + ': [head-upload] - ' + err);
+			res.json({res : false, info : 'bad request'});
+			return;
+		}      
+		
+		if (fields.uid == null || fields.uid == '') {                              
+		    console.log(new Date()  + ': [head-upload] - bad request');
+		    res.json({res : false, info : 'bad request'});
+		    return;
+	    }
+	
+    	// the user exist
+	    var query = 'select 1 from users where id = ?';
+		var uid = parseInt(fields.uid);
+		if (isNaN(uid) || uid < 0) { 
+		    console.log(new Date() + ': [mysql-query-uid] - ' + err);
+            res.json({res : false, info : 'upload fail'}); 
+		    return;
+	    }
+        console.log(new Date() + ': [mysql-query] - ' + query);
+	    mysql.query(query, [uid], function(err, rows, fields) {
+		    if (err) {
+                console.log(new Date() + ': [mysql-query] - ' + err);
+                res.json({res : false, info : 'upload fail'});
+	    	    return;
+            }
+			
+			if (rows.length == 0) {
+				console.log(new Date() + 'user doesn\'t exist');
+				res.json({res : false, info : 'upload failed'});
+				return;
+			}
+			req.uid = uid;  
+			console.log(new Date() + 'uid: ' + req.uid);
+						
+			if(files.upload.size == 0) {
+				console.log(new Date() + 'no file update, or size is 0');
+				res.json({res: false, info: 'no file'});
+				return;
+			} else {
+    			req.files = files; 
+			    next();
+			}
+	    });		
+	});
+});
+
+/* upload step2 */
+router.post('/uploadpic', function(req, res, next) {
+	var ext = '';
+	switch (req.files.upload.type) {
+		case 'image/pjpeg':
+			ext = 'jpg';
+			break;
+		case 'image/jpeg':
+			ext = 'jpg';
+			break;
+		case 'image/png':
+			ext = 'png';
+			break;
+		case 'image/x-png':
+			ext = 'png';
+			break;
+		default:
+			//res.render('result', json);
+			console.log('pic type: default');
+			res.json({res: false, info: 'default'});
+			return;
+	}
+		
+    //重命名
+    var newName = req.uid + '.' + ext;
+	var distPath = path.join(__dirname, '..', '..', 'public/img/users/');
+    fs.renameSync(req.files.upload.path, distPath + newName);
+    console.log(new Date() + ': [add-user-photo-toDist]- Succeeded! - ' + newName);
+
+    //路径存入数据库	
+	var query = 'update users set photo = ? where id = ?';
+	console.log(new Date() + ': [mysql-query] - ' + query);
+	mysql.query(query, ['/img/users/' + newName, req.uid], function(err, rows, fields) {
+		if (err) {
+			console.log(new Date() + ': [mysql-query] - ' + err);
+			res.json({res: false, info: 'add photo path to db fail'});
+			return;
+		} else {
+			res.json({res: true, info: 'add photo path to db success'});
+		}
 	});
 });
 

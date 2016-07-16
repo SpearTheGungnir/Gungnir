@@ -149,26 +149,26 @@ router.get('/delete', function(req, res, next) {
 		    return;
 		} 
 		//删除图片
-		var deletePic = 'select photo from moments where id = ?';
+		var deletePic = 'select id, photo from moments where id = ?';
 		mysql.query(deletePic, req.query.mid, function(err, rows, fields) {
 			if(err) {
-		    console.log(new Date() + ' : [mysql-delete-photo] - ' + err);
-		    res.json({res: false, info: 'delete fail'});
-		    return;
-		  }
+		        console.log(new Date() + ' : [mysql-delete-photo] - ' + err);
+		        res.json({res: false, info: 'delete fail'});
+		        return;
+		    }
 			if(rows[0].photo != null ) {
 				var photoPath = path.join(__dirname, '..', '..', 'public/img/moments/');
-		   	fs.unlink(photoPath + rows[0].id + '.jpg', function(err) {
-		      if (err) {
-		        console.log(new Date() + ': [delete-file] - ' + err);
-					}
+		   	    fs.unlink(photoPath + rows[0].id + '.jpg', function(err) {
+		            if (err) {
+		                console.log(new Date() + ': [delete-file] - ' + err);
+				    }
 				});
 				fs.unlink(photoPath + rows[0].id + '.png', function(err) {
-		      if (err) {
-		        console.log(new Date() + ': [delete-file] - ' + err);
+		            if (err) {
+		                console.log(new Date() + ': [delete-file] - ' + err);
 					}
 				});
-		  }
+		    }
 			next();
 		});	
 	});
