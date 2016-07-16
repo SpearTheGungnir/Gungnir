@@ -304,23 +304,24 @@ router.post('/upload', function(req, res, next) {
 
 /* ADD MARK */
 router.get('/addMark', function(req, res, next) {
+	var score = parseInt(req.query.score);
 	if (req.query.rid == null || req.query.rid == '' ||
-		req.query.uid == null || req.query.score == null ) {  //输入检测
+		req.query.uid == null || isNaN(score) || score < 0 || score > 5) {  //输入检测
 		console.log(new Date()  + ': [add-rmark-restaurant] - bad request');
 		res.json({res : false, info : 'bad request'});
 		return;
 	}
 	
-	var loginid = req.session.userid;
+	/*var loginid = req.session.userid;
 	if (loginid == null || loginid <= 0 || isNaN(loginid)) { //登录检测
     console.log(new Date() + ': [add-rmark-restaurant] - logout');
 		res.json({res : false, info : 'logout'});
 		return;
-	}	
+	}	*/
 	
 	var query = 'insert into rmark values(?, ?, ?, now())';
 	console.log(new Date() + ': [mysql-query] - ' + query);
-	mysql.query(query, [req.query.uid, req.query.rid, req.query.score], function(err, rows, fields) {
+	mysql.query(query, [req.query.uid, req.query.rid, score], function(err, rows, fields) {
 		if (err) {
 			console.log(new Date() + ': [mysql-query] - ' + err);
         res.json({res : false, info : 'insert fail'});   //可防止重复评分
