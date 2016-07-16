@@ -21,47 +21,43 @@
 						}
 					}
 				}
-				xmlhttp.open('GET', '/manager/homepage/sudo/foods/delete' + id);
+				xmlhttp.open('GET', '/manager/homepage/sudo/moments/delete' + id);
 				xmlhttp.send();
 			}
 			function search() {
-				var rname = document.getElementById('restaurant').value;
+				var uname = document.getElementById('user').value;
 				var str = '';
-				if (rname.length > 0)
-					str = '?rname=' + encodeURIComponent(rname);
-				window.location.href = '/manager/homepage/sudo/foods/list0' + str;
+				if (uname.length > 0)
+					str = '?uname=' + encodeURIComponent(uname);
+				window.location.href = '/manager/homepage/sudo/moments/list0' + str;
 			}
 		</script>
 	</head>
 	<body>
 		<h1><%= title %></h1>
 		<h2><a href='/manager/homepage'>返回</a></h2>
-		<p>Filter: <form>食堂：<input id='restaurant' type='text' value='<%= search.rname %>'></input>
+		<p>Filter: <form>用户：<input id='user' type='text' value='<%= search.uname %>'></input>
 			<input type='submit' value='Go' onclick='search();return false'></input></form></p>
 		<table>
 			<tr>
-				<th>id</th><th>foodName</th><th>ownerId</th><th>restaurantName</th><th>origin</th><th>price</th><th>feature</th><th>special</th><th>time</th><th>operation</th>
+				<th>id</th><th>userId</th><th>userName</th><th>comment</th><th>time</th><th>operation</th>
 			</tr>
 			<% for(var i = 0; i < list.length; ++i) { %>
 				<tr>
 					<td><%= list[i].id %></td>
-					<td><%= list[i].fname %></td>
-					<td><%= list[i].owner %></td>
-					<td><%= list[i].rname %></td>
-					<td><%= list[i].origin %></td>
-					<td><%= list[i].price %></td>
-          <td><%= list[i].feature %></td>
-					<td><%= list[i].special %></td>
+					<td><%= list[i].uid %></td>
+					<td><%= list[i].uname %></td>
+					<td><%= list[i].comment %></td>
 					<td><%= list[i].time %></td>
 					<td><button type='button' onclick='deleteajax(<%= list[i].id %>)'>删除</button></td>
 				</tr>
 			<% } %>
 		</table>
 		<% if (page > 0) { %>
-			<p><a href='/manager/homepage/sudo/foods/list<%= page - 1 %>?rname=<%= encodeURIComponent(search.rname) %>'>上一页</a></p>
+			<p><a href='/manager/homepage/sudo/moments/list<%= page - 1 %>?uname=<%= encodeURIComponent(search.uname) %>'>上一页</a></p>
 		<% } %>
 		<% if (list.length > 0) { %>
-			<p><a href='/manager/homepage/sudo/foods/list<%= page + 1 %>?rname=<%= encodeURIComponent(search.rname) %>'>下一页</a></p>
+			<p><a href='/manager/homepage/sudo/moments/list<%= page + 1 %>?uname=<%= encodeURIComponent(search.uname) %>'>下一页</a></p>
 		<% } %>
 	</body>
 </html>

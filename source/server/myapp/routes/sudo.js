@@ -76,6 +76,31 @@ router.get('/comments/list:page', function(req, res, next) {
 	});		
 });
 
+/* DELETE Comment */
+router.get('/comments/delete:id', function(req, res, next) {
+  var cid = parseInt(req.params.cid);
+	if (isNaN(cid) || cid <= 0) {
+		console.log(new Date() + ': [delete-food] - bad request');
+		res.json({res: false, info: 'bad request'});
+		return;
+	}
+	var query = 'delete from fcomments where id = ?';
+	console.log(new Date() + ': [mysql-query]' + query);
+	mysql.query(query, [cid], function(err, rows, fields) {
+		if (err) {
+			console.log(new Date() + ': [mysql-query] - ' + err);
+			res.json({res: false, info: 'query-fail'});
+		} else if (rows.length === 0) {
+			console.log(new Date() + ': [delete-comment] - fail');
+			res.json({res: false, info: 'delete-fail'});
+		} else {
+			console.log(new Date() + ': [mysql-query] - Succeeded!');
+			console.log(new Date() + ': [delete-comment] - Succeeded!');
+			res.json({res: true, info: ''});
+		}
+	});
+});
+
 /* FoodList */
 router.get('/foods/list:page', function(req, res, next) {
 	var page = parseInt(req.params.page);
@@ -85,7 +110,6 @@ router.get('/foods/list:page', function(req, res, next) {
 	if (req.query.rname != null && req.query.rname !== '') {
 		query += ' and r.rname = ?';
 		arr.push(req.query.rname);
-		first = false;
 	} else 
 		req.query.rname = '';
 	if (!isNaN(page) && page >= 0)
@@ -98,6 +122,99 @@ router.get('/foods/list:page', function(req, res, next) {
 			console.log(new Date() + ': [mysql-query] - Succeeded! - ' + rows.length);
 		res.render('foodList', {title: 'foodList', page: page, list: rows, search: {rname: req.query.rname}});
 	});		
+});
+
+/* DELETE food */
+router.get('/foods/delete:id', function(req, res, next) {
+	var fid = parseInt(req.params.id);
+	if (isNaN(fid) || fid <= 0) {
+		console.log(new Date() + ': [delete-food] - bad request');
+		res.json({res: false, info: 'bad request'});
+		return;
+	}
+	var query = 'delete from foods where id = ?';
+	console.log(new Date() + ': [mysql-query]' + query);
+	mysql.query(query, [fid], function(err, rows, fields) {
+		var foodPath = path.join(__dirname, '..', '..', 'public/img/foods/');
+		fs.unlink(foodPath + fid + '.jpg', function(err) {
+			if (err)
+				console.log(new Date() + ': [delete-file] - ' + err);
+		});
+		fs.unlink(foodPath + fid + '.png', function(err) {
+			if (err)
+				console.log(new Date() + ': [delete-file] - ' + err);
+		});
+
+		if (err) {
+			console.log(new Date() + ': [mysql-query] - ' + err);
+			res.json({res: false, info: 'query-fail'});
+		} else if (rows.length === 0) {
+			console.log(new Date() + ': [delete-food] - fail');
+			res.json({res: false, info: 'delete-fail'});
+		} else {
+			console.log(new Date() + ': [mysql-query] - Succeeded!');
+			console.log(new Date() + ': [delete-food] - Succeeded!');
+			res.json({res: true, info: ''});
+		}
+	});
+});
+
+/* MomentList */
+router.get('/moments/list:page', function(req, res, next) {
+	var page = parseInt(req.params.page);
+	var numOfPage = 10;
+	var query = 'select m.id, m.uid, u.uname, m.comment, m.photo, m.time from moments m, users u where m.uid = u.id';
+	var arr = new Array();
+	if (req.query.uname != null && req.query.uname !== '') {
+		query += ' and u.uname = ?';
+		arr.push(req.query.uname);
+	} else 
+		req.query.uname = '';
+	if (!isNaN(page) && page >= 0)
+		query += ' limit ' + page * numOfPage + ', ' + numOfPage;
+	console.log(new Date() + ': [mysql-query] - ' + query);
+	mysql.query(query, arr, function(err, rows, fields) {
+		if (err)
+			console.log(new Date() + ': [mysql-query] - ' + err);
+		else
+			console.log(new Date() + ': [mysql-query] - Succeeded! - ' + rows.length);
+		res.render('momentList', {title: 'momentList', page: page, list: rows, search: {uname: req.query.uname}});
+	});		
+});
+
+/* DELETE moment */
+router.get('/moments/delete:id', function(req, res, next) {
+	var mid = parseInt(req.params.id);
+	if (isNaN(mid) || mid <= 0) {
+		console.log(new Date() + ': [delete-moment] - bad request');
+		res.json({res: false, info: 'bad request'});
+		return;
+	}
+	var query = 'delete from moments where id = ?';
+	console.log(new Date() + ': [mysql-query]' + query);
+	mysql.query(query, [mid], function(err, rows, fields) {
+		var momentPath = path.join(__dirname, '..', '..', 'public/img/moments/');
+		fs.unlink(momentPath + mid + '.jpg', function(err) {
+			if (err)
+				console.log(new Date() + ': [delete-file] - ' + err);
+		});
+		fs.unlink(momentPath + mid + '.png', function(err) {
+			if (err)
+				console.log(new Date() + ': [delete-file] - ' + err);
+		});
+
+		if (err) {
+			console.log(new Date() + ': [mysql-query] - ' + err);
+			res.json({res: false, info: 'query-fail'});
+		} else if (rows.length === 0) {
+			console.log(new Date() + ': [delete-food] - fail');
+			res.json({res: false, info: 'delete-fail'});
+		} else {
+			console.log(new Date() + ': [mysql-query] - Succeeded!');
+			console.log(new Date() + ': [delete-moment] - Succeeded!');
+			res.json({res: true, info: ''});
+		}
+	});
 });
 
 module.exports = router;
