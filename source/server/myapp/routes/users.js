@@ -80,7 +80,7 @@ router.post('/login', function(req, res, next) {
 		res.json({res : true, info : 'bad request'});
 		return;
 	}
-	var query = 'select id, uname, type from users where uname = ? and pwd = ? limit 1';
+	var query = 'select id, uname, type, ifnull(photo, \'/img/users/default.jpeg\') as photoaddr from users where uname = ? and pwd = ? limit 1';
   console.log(new Date() + ': [mysql-query] - ' + query);
 	mysql.query(query, [req.body.user, req.body.pwd], function(err, rows, fields) {
     if (err) {
@@ -95,7 +95,7 @@ router.post('/login', function(req, res, next) {
 			req.session.userid = rows[0].id;
 			req.session.username = rows[0].uname;
 			req.session.type = rows[0].type;
-			res.json({res : true, info : {name : rows[0].uname, id : rows[0].id, type : rows[0].type}});
+			res.json({res : true, info : {name : rows[0].uname, id : rows[0].id, type : rows[0].type, photoaddr: rows[0].photoaddr}});
 		} else {
 			console.log(new Date() + ': [login] - User: ' + req.body.user + ' - Failed!');
 			res.json({res : false, info : 'wrong'});
@@ -317,7 +317,7 @@ router.post('/uploadpic', function(req, res, next) {
 			res.json({res: false, info: 'add photo path to db fail'});
 			return;
 		} else {
-			res.json({res: true, info: 'add photo path to db success'});
+			res.json({res: true, info: '/img/users/' + newName});
 		}
 	});
 });
