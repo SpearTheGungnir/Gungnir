@@ -58,7 +58,7 @@ router.post('/register', function(req, res, next) {
   var query = 'insert into users values (null, ?, ?, 0, now())';
 	var type = parseInt(req.body.type);
 	if (!isNaN(type) && type === 1)
-	  query = 'insert into users values (null, ?, ?, 1, now())';
+	  query = 'insert into users values (null, ?, ?, 1, null, now())';
   console.log(new Date() + ': [mysql-insert] - ' + query);
   mysql.query(query, [req.body.user, req.body.pwd], function(err, rows, fields) {
     if (err) {
