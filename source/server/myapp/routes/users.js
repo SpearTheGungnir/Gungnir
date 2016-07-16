@@ -55,7 +55,7 @@ router.post('/register', function(req, res, next) {
 
 /* REGISTER Step-2 */
 router.post('/register', function(req, res, next) {
-  var query = 'insert into users values (null, ?, ?, 0, now())';
+  var query = 'insert into users values (null, ?, ?, 0, null, now())';
 	var type = parseInt(req.body.type);
 	if (!isNaN(type) && type === 1)
 	  query = 'insert into users values (null, ?, ?, 1, null, now())';
