@@ -66,7 +66,7 @@ router.post('/register', function(req, res, next) {
       res.json({res : false, info : 'insert fail'});
     }
     else {
-      console.log(new Date() + ': [mysql-insert] - Succeeded!') + ' in set');
+      console.log(new Date() + ': [mysql-insert] - Succeeded!');
       console.log(new Date() + ': [register] - Succeeded!');
       res.json({res : true, info : ''});
     }
