@@ -44,6 +44,27 @@ router.get('/comments', function(req, res, next) {
 	});
 });
 
-
+/* ADD comment */
+router.get('/comments/add', function(req, res, next) {
+	var uid = parseInt(req.query.uid);
+	var fid = parseInt(req.query.fid);
+	var score = parseInt(req.query.score);
+	if (isNaN(uid) || isNaN(fid) || isNaN(score) || score < 0 || score > 5 || req.query.comment == null) {
+		console.log(new Date() + ': [add-comment] - bad request');
+		res.json({res: false, info: 'bad request'});
+		return;
+	}
+	var query = 'insert into fcomments values (null, ?, ?, ? ,? ,now())';
+	console.log(new Date() + ': [mysql-query] - ' + query);
+	mysql.query(query, [uid, fid, score, req.query.comment], function(err, rows, fields) {
+		if (err) {
+			console.log(new Date() + ': [mysql-query] - ' + err);
+			res.json({res: false, info: 'query fail'});
+		} else {
+			console.log(new Date() + ': [mysql-query] - Succeeded!');
+			res.json({res: true, info: ''});
+		}
+	});
+});
 
 module.exports = router;
