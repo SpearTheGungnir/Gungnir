@@ -48,7 +48,7 @@ router.post('/uploadpic', function(req, res, next) {
 		}      
 		
 		if (fields.comment == null || fields.comment == '' ||
-			fields.uid == null ) {                              
+			fields.uid == null || fields.uid != req.session.userid) {                              
 		    console.log(new Date()  + ': [moment-add] - bad request');
 		    res.json({res : false, info : 'bad request'});
 		    return;
