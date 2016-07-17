@@ -24,6 +24,7 @@ router.get('/', function(req, res, next) {
 		else
 			console.log(new Date() + ': [mysql-query] - Secceeded! ' +
 				rows.length + ' row' + (rows.length > 1 ? 's' : '') + ' in set');
+		console.log('gejian: ' + req.session.id + ' - ' + req.session.gejian);
 		res.json(rows);
 	});
 });
