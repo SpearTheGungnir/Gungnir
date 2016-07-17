@@ -102,7 +102,7 @@ router.get('/delete', function(req, res, next) {
 		res.json({res : false, info : 'logout'});
 		return;
 	}
-  var query = 'select photo from users u join restaurants r on u.id = r.owner where r.id = ? and (? = 2 or u.id = ?) limit 1';
+  var query = 'select r.photo from users u join restaurants r on u.id = r.owner where r.id = ? and (? = 2 or u.id = ?) limit 1';
 	console.log(new Date() + ': [mysql-query] - ' + query);
 	mysql.query(query, [req.query.rid, req.session.type, loginid], function (err, rows, fields) { //删除操作的用户是否存在且有权限
 	  if (err) {
@@ -214,8 +214,6 @@ router.get('/update', function(req, res, next) {
 		next();
 	});
 });
-
-
 
 /* UPDATE restaurant - step 2 !!!!*/
 router.get('/update', function(req, res, next) {
