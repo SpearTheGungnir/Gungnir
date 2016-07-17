@@ -6,7 +6,7 @@ var fs=require('fs');
 var path=require('path');
 
 router.get('/', function(req, res, next) {
-	var query = 'select m.id, m.uid, uname, comment, ifnull(m.photo, \'/img/moments/default.jpeg\') as photoaddr, m.time, if(l2.uid is null, false, true) isliked, sum(if(l1.uid is null, 0, 1)) as cnt from moments m left join likes l1 on m.id = l1.mid join users u on m.uid = u.id left join likes l2 on l2.uid = ? and l2.mid = m.id ';
+	var query = 'select m.id, m.uid, uname, comment, ifnull(m.photo, \'/img/moments/default.jpeg\') as photoaddr, ifnull(u.photo, \'/img/users/default.jpeg\') as uphotoaddr, m.time, if(l2.uid is null, false, true) isliked, sum(if(l1.uid is null, 0, 1)) as cnt from moments m left join likes l1 on m.id = l1.mid join users u on m.uid = u.id left join likes l2 on l2.uid = ? and l2.mid = m.id ';
 	var uid = parseInt(req.query.uid);
 	if (!isNaN(uid) && uid >= 0)
 		query += ' where m.uid = ' + uid;
