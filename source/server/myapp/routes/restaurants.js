@@ -21,7 +21,7 @@ router.get('/', function(req, res, next) {
 		else
 			console.log(new Date() + ': [mysql-query] - Secceeded! ' +
 				rows.length + ' row' + (rows.length > 1 ? 's' : '') + ' in set');
-		req.session.gejian = 'gejian' + ' ' + req.session.id;
+		req.session.gejian = 'gejian' + ' ' + req.session.userid;
 		res.json(rows);
 	});
 });
@@ -264,6 +264,7 @@ router.post('/upload', function(req, res, next) {
 				ext = 'png';
 				break;
 			default:
+				fs.unlink(files.upload.path, function (err) {});
 				res.render('result', json);
 				return;
 		}
@@ -271,11 +272,13 @@ router.post('/upload', function(req, res, next) {
 		mysql.query(query, [req.session.userid], function(err, rows, fields) {
 			if (err) {
 				console.log(new Date() + ': [mysql-query] - ' + err);
+				fs.unlink(files.upload.path, function (err) {});	
 				res.render('result', json);
 				return;
 			}
 			if (rows.length === 0) {
 				console.log(new Date() + ': [upload] - bad user')
+				fs.unlink(files.upload.path, function (err) {});
 				res.render('result', json);
 				return;
 			}
@@ -305,7 +308,8 @@ router.post('/upload', function(req, res, next) {
 router.get('/addMark', function(req, res, next) {
 	var score = parseInt(req.query.score);
 	if (req.query.rid == null || req.query.rid == '' ||
-		req.query.uid == null || isNaN(score) || score < 0 || score > 5) {  //输入检测
+		req.query.uid == null || isNaN(score) || score < 0 || score > 5 ||
+		req.session.id != req.query.uid) {  //输入检测
 		console.log(new Date()  + ': [add-rmark-restaurant] - bad request');
 		res.json({res : false, info : 'bad request'});
 		return;

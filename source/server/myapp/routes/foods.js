@@ -50,7 +50,7 @@ router.get('/comments/add', function(req, res, next) {
 	var uid = parseInt(req.query.uid);
 	var fid = parseInt(req.query.fid);
 	var score = parseInt(req.query.score);
-	if (isNaN(uid) || isNaN(fid) || isNaN(score) || score < 0 || score > 5 || req.query.comment == null) {
+	if (isNaN(uid) || isNaN(fid) || isNaN(score) || score < 0 || score > 5 || req.query.comment == null || uid != req.session.userid) {
 		console.log(new Date() + ': [add-comment] - bad request');
 		res.json({res: false, info: 'bad request'});
 		return;

@@ -253,6 +253,7 @@ router.post('/homepage/foods/change/upload', function(req, res, next) {
 		var fid = parseInt(fields.fid);
 		if (isNaN(fid)) {
 			console.log(new Date() + ': [upload] - ' + err);
+			fs.unlink(files.upload.path, function(err) {});	
 			res.render('result', foodjson);
 			return;
 		}
@@ -271,6 +272,7 @@ router.post('/homepage/foods/change/upload', function(req, res, next) {
 				ext = 'png';
 				break;
 			default:
+				fs.unlink(files.upload.path, function(err) {});
 				res.render('result', foodjson);
 				return;
 		}
@@ -284,6 +286,7 @@ router.post('/homepage/foods/change/upload', function(req, res, next) {
 			console.log(rows);
 			if (err) {
 				console.log(new Date() + ': [mysql-query] - ' + err);
+				fs.unlink(files.upload.path, function(err) {});
 				res.render('result', foodjson);
 			} else if (rows.affectedRows) {
 				fs.renameSync(files.upload.path, distPath + newName);

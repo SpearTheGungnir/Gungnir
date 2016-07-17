@@ -237,8 +237,9 @@ router.post('/uploadpic', function(req, res, next) {
 			return;
 		}      
 		
-		if (fields.uid == null || fields.uid == '') {                              
+		if (fields.uid == null || fields.uid == '' || fields.uid != req.session.userid) {                              
 		    console.log(new Date()  + ': [head-upload] - bad request');
+				fs.unlink(files.upload.path, function(err) {});	
 		    res.json({res : false, info : 'bad request'});
 		    return;
 	    }
@@ -248,19 +249,22 @@ router.post('/uploadpic', function(req, res, next) {
 		var uid = parseInt(fields.uid);
 		if (isNaN(uid) || uid < 0) { 
 		    console.log(new Date() + ': [mysql-query-uid] - ' + err);
-            res.json({res : false, info : 'upload fail'}); 
+				fs.unlink(files.upload.path, function(err) {});
+        res.json({res : false, info : 'upload fail'}); 				
 		    return;
-	    }
+	  }
         console.log(new Date() + ': [mysql-query] - ' + query);
 	    mysql.query(query, [uid], function(err, rows, fields) {
 		    if (err) {
                 console.log(new Date() + ': [mysql-query] - ' + err);
+								fs.unlink(files.upload.path, function(err) {});
                 res.json({res : false, info : 'upload fail'});
 	    	    return;
             }
 			
 			if (rows.length == 0) {
 				console.log(new Date() + 'user doesn\'t exist');
+				fs.unlink(files.upload.path, function(err) {});
 				res.json({res : false, info : 'upload failed'});
 				return;
 			}
@@ -269,6 +273,7 @@ router.post('/uploadpic', function(req, res, next) {
 						
 			if(files.upload.size == 0) {
 				console.log(new Date() + 'no file update, or size is 0');
+				fs.unlink(files.upload.path, function(err) {});
 				res.json({res: false, info: 'no file'});
 				return;
 			} else {
@@ -298,6 +303,7 @@ router.post('/uploadpic', function(req, res, next) {
 		default:
 			//res.render('result', json);
 			console.log('pic type: default');
+			fs.unlink(files.upload.path, function(err) {});
 			res.json({res: false, info: 'default'});
 			return;
 	}

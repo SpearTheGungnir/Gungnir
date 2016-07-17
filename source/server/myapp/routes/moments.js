@@ -50,6 +50,7 @@ router.post('/uploadpic', function(req, res, next) {
 		if (fields.comment == null || fields.comment == '' ||
 			fields.uid == null || fields.uid != req.session.userid) {                              
 		    console.log(new Date()  + ': [moment-add] - bad request');
+				fs.unlink(files.upload.path, function(err) {});  // 删除上传文件
 		    res.json({res : false, info : 'bad request'});
 		    return;
 	    }
@@ -60,6 +61,7 @@ router.post('/uploadpic', function(req, res, next) {
 	    mysql.query(insertComment, [fields.uid, fields.comment], function(err, rows, fields) {
 		    if (err) {
                 console.log(new Date() + ': [mysql-insert] - ' + err);
+								fs.unlink(files.upload.path, function(err) {});  // 删除上传文件
                 res.json({res : false, info : 'insert fail'});
 	    	    return;
             } else {
@@ -71,6 +73,7 @@ router.post('/uploadpic', function(req, res, next) {
 				
 				if(files.upload.size == 0) {
 					console.log(new Date() + 'no file update, or size is 0');
+					fs.unlink(files.upload.path, function(err) {});  // 删除上传文件
 					res.json({res: false, info: 'no file'});
 					return;
 				} else {
@@ -101,6 +104,7 @@ router.post('/uploadpic', function(req, res, next) {
 		default:
 			//res.render('result', json);
 			console.log('pic type: default');
+			fs.unlink(files.upload.path, function(err) {});  // 删除上传文件
 			res.json({res: false, info: 'default'});
 			return;
 	}
@@ -129,7 +133,7 @@ router.post('/uploadpic', function(req, res, next) {
 router.get('/delete', function(req, res, next) {
 	//mid, uid
 	if(req.query.mid == null || req.query.mid == "" ||
-	   req.query.uid == null || req.query.uid == "") {
+	   req.query.uid == null || req.query.uid == "" || req.query.uid != req.session.userid) {
 	   console.log(new Date() + ': [delete-moment] - bad request');	 
        res.json({res : false, info : 'bad request'});
 	   return;	   
@@ -195,6 +199,12 @@ router.get('/like', function(req, res, next) {
 	//uid:谁点的赞 mid:点的哪一条朋友圈
 	var query = 'insert into likes values';
 	var uid = parseInt(req.query.uid);
+	if (isNaN(uid) || req.session.userid != uid) {
+		console.log(new Date() + ': [like]');
+
+		res.json({res: false, info: 'bad user'});
+		return;
+	}
 	if (!isNaN(uid) && uid >= 0) {
 		query += '(' + uid;
 	}
@@ -214,7 +224,5 @@ router.get('/like', function(req, res, next) {
 		res.json({res: true, info: 'like success!'});
 	});
 });
-
-
 
 module.exports = router;
