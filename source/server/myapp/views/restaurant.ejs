@@ -1,8 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <!-- 可选的Bootstrap主题文件（一般不用引入） >
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"-->
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    
+	
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
 		<script>
 			function deleteajax(rid) {
 				if (!confirm('您确定要倒闭吗？这个操作无法撤回'))
@@ -25,33 +34,99 @@
 		</script>
   </head>
   <body>
-    <p>Welcome to <%= title %></p> <a href='/manager/homepage'>回去</a>
-		<form action='/restaurants/<%= action %>' method='GET'>
-			<table>
-				<tr>
-					<td>餐馆名：</td><td><input type='text' name='name' value='<%= rname %>' maxlength='32' id='rname'/></td>
-				</tr>
-				<tr>
-					<td>地址：</td><td><input type='text' name='addr' value='<%= addr %>' maxlength='32'/></td>
-				</tr>
-				<tr>
-					<td>电话：</td><td><input type='text' name='tel' value='<%= tel %>' maxlength='16'/></td>
-				</tr>
-				<tr>
-					<td>简介：</td><td><input type='text' name='feature' value='<%= feature %>' maxlength='128'/></td>
-				</tr>
-				<tr>
-					<td><input type='submit' value='提交'/></td>
-				</tr>
-			</table>
-		</form>
-		<form action='/restaurants/upload' method='POST' enctype='multipart/form-data'>
-			<input type='file' <%= disabled %> name='upload'/>
-			<input type='submit' value='上传图片' <%= disabled %>/>
-		</form>
-		<% if (disabled === "") {%>
-		<a href='/manager/homepage/foods/list'>饭菜中心</a></br>
-		<a href='' onclick='deleteajax(<%= rid %>);return false'>餐馆倒闭</a>
-		<% } %>
+        <nav class="navbar navbar-inverse navbar-static-top">
+          <div class="container">
+            <a class="navbar-brand" href="#">GUNGNIR</a>
+            <p class="navbar-text navbar-right">Signed in as <a href="#" class="navbar-link"><%= username %></a>
+		    <a href='javascript:logout()' class="navbar-link">注销</a>
+		    </p>
+          </div>
+        </nav>
+  
+        <div class="row show-grid">
+          <div class="col-lg-2">
+		    <ul class="nav nav-pills nav-stacked">
+			
+    		<% if (usertype) { %>			
+			<li role="presentation" class="dropdown active">
+			  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+               我的餐厅 <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+               <li role="presentation"><a href='/manager/homepage/restaurant'>餐馆信息</a></li>
+               <li role="presentation"><a href='/manager/homepage/foods/list'>饭菜中心</a></li>
+              </ul>
+			</li>
+            <% } %>
+			<% if (usertype === 2) {%>
+        	<li role="presentation"><a href='/manager/homepage/sudo/users/list0'>用户管理</a></li>
+            <li role="presentation"><a href='/manager/homepage/sudo/restaurants/list0'>餐厅管理</a></li>
+            <li role="presentation"><a href='/manager/homepage/sudo/comments/list0'>评论管理</a></li>
+            <li role="presentation"><a href='/manager/homepage/sudo/foods/list0'>食物管理</a></li>
+            <li role="presentation"><a href='/manager/homepage/sudo/moments/list0'>圈子管理</a></li>			
+            <% } %>
+			</ul>
+		  </div>
+		  
+		  
+		  <div class="col-lg-10">
+		  	<div class="content">
+              <div class="header">  
+			    <h1 class="page-title">Welcome to <%= title %></h1>
+              </div>
+
+              <div class="container-fluid">
+                <div class="row-fluid">        
+                  <div class="btn-toolbar">
+				  <% if (disabled === "") {%>
+                    <button class="btn btn-danger", onclick='deleteajax(<%= rid %>);return false'><i class="icon-plus"></i> 餐馆倒闭</button>
+                  <% } %>
+				  </div><br/>
+                  <div class="well">
+				    <div class="row show-grid">
+					<div class="col-lg-6">
+		              <form action='/restaurants/<%= action %>' method='GET'>
+			          
+					  <div class="input-group">
+	    			    <span class="input-group-addon" id="sizing-addon2">店名</span>
+                        <input type="text" class="form-control" name='name' value='<%= rname %>' maxlength='32' id='rname'/>
+                      </div><br/>
+					  <div class="input-group">
+						<span class="input-group-addon" id="sizing-addon2">地址</span>
+                        <input type="text" class="form-control" name='addr' value='<%= addr %>' maxlength='32'/>
+                      </div><br/>
+					  <div class="input-group">			  
+					    <span class="input-group-addon" id="sizing-addon2">电话</span>
+                        <input type="text" class="form-control" name='tel' value='<%= tel %>' maxlength='16'/>
+                      </div><br/>
+					  <div class="input-group">					
+					    <span class="input-group-addon" id="sizing-addon2">简介</span>
+                        <input type="text" class="form-control" name='feature' value='<%= feature %>' maxlength='128'/>
+					  </div><br/>
+					  
+					  <button class="btn btn-primary" type='submit' value='提交'>提交</button>
+		              </form>  
+					</div>
+					<div class="col-lg-6">
+					  <form action='/restaurants/upload' method='POST' enctype='multipart/form-data'>
+			            <div class="input-group">					
+                          <input type='file' <%= disabled %> name='upload'/>
+					    </div><br/>
+						
+						<!--input type='file' <%= disabled %> name='upload'/>
+			            <input type='submit' value='上传图片' <%= disabled %>/-->
+		                <a href="#" class="thumbnail">
+                          <img src="<%= pic %>" alt="...">
+                        </a>
+					    <button type='submit' class="btn btn-primary" value='上传图片' <%= disabled %> >上传图片</button>
+					  </form>
+		            </div>
+					</div>
+                  </div>
+                </div>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
 	</body>
 </html>

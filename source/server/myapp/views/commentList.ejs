@@ -1,8 +1,17 @@
 <!DOCTYPE html>
 <html>
 	<head>
+	    <!-- 新 Bootstrap 核心 CSS 文件 -->
+        <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <!-- 可选的Bootstrap主题文件（一般不用引入） -->
+        <!--link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"-->
+        <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+        <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+        <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+        <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	
+	
 		<title><%= title %></title>
-		<link rel='stylesheet' href='/stylesheets/style.css'/>
 		<script>
 			function deleteajax(id) {
 				if (!confirm('您确定要删除吗？'))
@@ -39,33 +48,91 @@
 		</script>
 	</head>
 	<body>
-		<h1><%= title %></h1>
-		<h2><a href='/manager/homepage'>返回</a></h2>
-		<p>Filter: <form>用户：<input id='user' type='text' value='<%= search.uname %>'></input>食物：<input id='food' type='text' value='<%= search.fname %>'></input>
-			<input type='submit' value='Go' onclick='search();return false'></input></form></p>
-		<table>
-			<tr>
-				<th>id</th><th>userid</th><th>userName</th><th>foodid</th><th>foodName</th><th>score</th><th>comment</th><th>time</th><th>operation</th>
-			</tr>
-			<% for(var i = 0; i < list.length; ++i) { %>
-				<tr>
+	    <nav class="navbar navbar-inverse navbar-static-top">
+          <div class="container">
+            <a class="navbar-brand" href="#">GUNGNIR</a>
+            <p class="navbar-text navbar-right">Signed in as <a href="#" class="navbar-link"><%= username %></a>
+    		<a href='javascript:logout()' class="navbar-link">注销</a>          
+			</p>
+          </div>
+        </nav>
+	    <div class="row show-grid">
+          <div class="col-lg-2">
+		    <ul class="nav nav-pills nav-stacked">
+			
+			<li role="presentation" class="dropdown">
+			  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+               我的餐厅 <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+               <li role="presentation"><a href='/manager/homepage/restaurant'>餐馆信息</a></li>
+               <li role="presentation"><a href='/manager/homepage/foods/list'>饭菜中心</a></li>
+              </ul>
+			</li>
+            <li role="presentation"><a href='/manager/homepage/sudo/users/list0'>用户管理</a></li>
+            <li role="presentation"><a href='/manager/homepage/sudo/restaurants/list0'>餐厅管理</a></li>
+            <li role="presentation" class="active"><a href='/manager/homepage/sudo/comments/list0'>评论管理</a></li>
+            <li role="presentation"><a href='/manager/homepage/sudo/foods/list0'>食物管理</a></li>
+            <li role="presentation"><a href='/manager/homepage/sudo/moments/list0'>圈子管理</a></li>					
+            </ul>
+		  </div>
+	
+	      <div class="col-lg-10">
+		  	<div class="content">
+              <div class="header"> 
+        		<h1><%= title %></h1>
+		        <!--h2><a href='/manager/homepage'>返回</a></h2-->
+		        <p>Filter: <form>用户：<input id='user' type='text' value='<%= search.uname %>'></input>食物：<input id='food' type='text' value='<%= search.fname %>'></input>
+			    <input type='submit' value='Go' onclick='search();return false'></input></form></p>
+		      </div>
+		      <div class="container-fluid">			
+			    <div class="well">
+                <table class="table">
+                <thead>
+                <tr>
+    				<th>id</th>
+					<th>userid</th>
+					<th>userName</th>
+					<th>foodid</th>
+					<th>foodName</th>
+					<th>score</th>
+					<th>comment</th>
+					<th>time</th>
+					<th>operation</th>
+				<th style="width: 26px;"></th>
+                </tr>
+                </thead>
+                <tbody>
+			      <% for(var i = 0; i < list.length; ++i) { %>
+				  <tr>
 					<td><%= list[i].id %></td>
 					<td><%= list[i].uid %></td>
 					<td><%= list[i].uname %></td>
 					<td><%= list[i].fid %></td>
 					<td><%= list[i].fname %></td>
 					<td><%= list[i].score %></td>
-          <td><%= list[i].comment %></td>
+                    <td><%= list[i].comment %></td>
 					<td><%= list[i].time %></td>
-					<td><button type='button' onclick='deleteajax(<%= list[i].id %>)'>删除</button></td>
-				</tr>
-			<% } %>
-		</table>
-		<% if (page > 0) { %>
-			<p><a href='/manager/homepage/sudo/comments/list<%= page - 1 %>?uname=<%= encodeURIComponent(search.uname) %>&fname=<%= encodeURIComponent(search.fname) %>'>上一页</a></p>
-		<% } %>
-		<% if (list.length > 0) { %>
-			<p><a href='/manager/homepage/sudo/comments/list<%= page + 1 %>?uname=<%= encodeURIComponent(search.uname) %>&fname=<%= encodeURIComponent(search.fname) %>'>下一页</a></p>
-		<% } %>
+					<td><button type='button' class='btn btn-danger btn-sm' onclick='deleteajax(<%= list[i].id %>)'>删除</button></td>
+				  </tr>
+			      <% } %>
+    			</tbody>
+	    	    </table>
+                <% if (page > 0) { %>
+			    <p><a href='/manager/homepage/sudo/comments/list<%= page - 1 %>?uname=<%= encodeURIComponent(search.uname) %>&fname=<%= encodeURIComponent(search.fname) %>'>上一页</a></p>
+		        <% } %>
+		        <% if (list.length > 0) { %>
+			    <p><a href='/manager/homepage/sudo/comments/list<%= page + 1 %>?uname=<%= encodeURIComponent(search.uname) %>&fname=<%= encodeURIComponent(search.fname) %>'>下一页</a></p>
+		        <% } %>
+			    </div>
+			    <footer>
+                        <hr>
+						<p class="pull-right">Collect from <a href="www.durarara.com" title="情報屋" target="_blank">情報屋</a></p>
+                        <p>&copy; 2016 <a href="#" target="_blank">Gungnir</a></p>
+                </footer>
+	          </div>
+	        </div>
+		  </div>
+	    </div>  
 	</body>
 </html>

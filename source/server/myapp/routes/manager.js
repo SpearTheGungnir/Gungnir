@@ -54,9 +54,9 @@ router.get('/homepage/restaurant', function(req, res, next) {
 			console.log(new Date() + '[mysql-query] - Succeeded!');
 		}
 	    if(rows.length) {
-    		res.render('restaurant', { title: '餐厅管理系统', action: 'update', rname: rows[0].rname, addr: rows[0].addr, tel: rows[0].tel, feature: rows[0].feature, disabled: '', rid: rows[0].id });	
+    		res.render('restaurant', { title: '餐厅管理系统', username: req.session.username, usertype: req.session.type, action: 'update', pic: rows[0].photo, rname: rows[0].rname, addr: rows[0].addr, tel: rows[0].tel, feature: rows[0].feature, disabled: '', rid: rows[0].id });	
 		} else {
-			res.render('restaurant', { title: '餐厅管理系统', action: 'add', rname: '', addr: '', tel: '', feature: '', disabled: 'disabled = \'disabled\'', rid: 0 });
+			res.render('restaurant', { title: '餐厅管理系统', username: req.session.username, usertype: req.session.type, action: 'add', pic: '', rname: '', addr: '', tel: '', feature: '', disabled: 'disabled = \'disabled\'', rid: 0 });
 		}	
 		//res.json(rows);
 	});
@@ -109,7 +109,7 @@ router.get('/homepage/foods/list', function(req, res, next) {
 	mysql.query(query, [req.rid], function(err, rows, fields) {
 		if (err)
 			console.log(new Date() + ': [mysql-query] - ' + err);
-		res.render('foods', {title: '食堂', list: rows});	
+		res.render('foods', {title: '食堂', username: req.session.username, usertype: req.session.type, list: rows});	
 	});
 });
 

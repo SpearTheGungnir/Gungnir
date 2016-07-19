@@ -1,16 +1,82 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    	<!-- 新 Bootstrap 核心 CSS 文件 -->
+        <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <!-- 可选的Bootstrap主题文件（一般不用引入） >
+        <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"-->
+        <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+        <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+        <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+        <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+	
+	<title><%= title %></title>
+    <!--link rel='stylesheet' href='/stylesheets/style.css' /-->
   </head>
   <body>
-    <h1>Welcome to <%= title %></h1> <a href='/manager/homepage/restaurant'>手动再见</a>
-		<table style='width: 100%'>
-			<tr>
-				<th>No</th><th>name</th><th>origin</th><th style='width: 30px'>price</th><th>feature</th><th colspan='4'>operation</th>
-			</tr>
-			<% for (var i = 0; i < list.length; ++i) { %>
+        <nav class="navbar navbar-inverse navbar-static-top">
+          <div class="container">
+            <a class="navbar-brand" href="#">GUNGNIR</a>
+            <p class="navbar-text navbar-right">Signed in as <a href="#" class="navbar-link"><%= username %></a>
+			<a href='javascript:logout()' class="navbar-link">注销</a>
+			</p>
+          </div>
+        </nav>	
+    	<div class="row show-grid">
+          <div class="col-lg-1">
+		    <ul class="nav nav-pills nav-stacked">
+			
+    		<% if (usertype) { %>			
+			<li role="presentation" class="dropdown active">
+			  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+               我的餐厅 <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+               <li role="presentation"><a href='/manager/homepage/restaurant'>餐馆信息</a></li>
+               <li role="presentation"><a href='/manager/homepage/foods/list'>饭菜中心</a></li>
+              </ul>
+			</li>
+            <% } %>
+			<% if (usertype === 2) {%>
+        	<li role="presentation"><a href='/manager/homepage/sudo/users/list0'>用户管理</a></li>
+            <li role="presentation"><a href='/manager/homepage/sudo/restaurants/list0'>餐厅管理</a></li>
+            <li role="presentation"><a href='/manager/homepage/sudo/comments/list0'>评论管理</a></li>
+            <li role="presentation"><a href='/manager/homepage/sudo/foods/list0'>食物管理</a></li>
+            <li role="presentation"><a href='/manager/homepage/sudo/moments/list0'>圈子管理</a></li>			
+            <% } %>
+			</ul>
+		  </div>
+		  
+		  
+          <div class="col-lg-11">
+		  	<div class="content">
+              <div class="header">  
+			    <h1 class="page-title">Welcome to <%= title %></h1>
+              </div>
+
+              <div class="container-fluid">
+                <div class="row-fluid">        
+                  <div class="btn-toolbar">
+                    <!--button class="btn btn-primary", onclick='window.location.href="/manager/homepage/restaurant"'><i class="icon-plus"></i> 手动再见</button-->
+                  </div>
+                  <div class="well">
+      <table class="table">
+        <thead>
+          <tr>
+          <th>id</th>
+          <th>foodName</th>
+	      <th>origin</th>
+		  <th>price</th>
+		  <th>feature</th>
+		  <th>operation</th>
+          <th style="width: 26px;"></th>
+          </tr>
+        </thead>
+        <tbody>
+		
+		<% for (var i = 0; i < list.length; ++i) { %>
 				<form action='/manager/homepage/foods/change/update' method='GET'>
 					<input type='hidden' name='fid' value='<%= list[i].id %>'/>
 					<tr>
@@ -19,23 +85,35 @@
 						<td><input type='text' name='origin' value='<%= list[i].origin %>' maxlength='64'/></td>
 						<td><input type='text' name='price' value='<%= list[i].price %>' maxlength='16'/></td>
 						<td><input type='text' name='feature' value='<%= list[i].feature %>' maxlength='128'/></td>
-						<td><input type='submit' value='提交'/>
-						<button type='button' onclick='window.location.href="/manager/homepage/foods/change/special?fid=" + <%= list[i].id %>' <% if (list[i].special) { %>disabled='true'<% } %>>设为特色</button>
-						<button type='button' onclick='window.location.href="/manager/homepage/foods/change/delete?fid=" + <%= list[i].id %>' >删除</button>
-						<button type='button' onclick='window.location.href = "/manager/homepage/foods/change/foodpic?fid=" + <%= list[i].id %>'>上传图片</button></td>
+						<td>
+						<div class="btn-group btn-group-sm" role="group" aria-label="...">
+						  <button class="btn btn-default" type='submit' value='提交'>提交</button>
+                          <button class="btn btn-success" type='button' onclick='window.location.href="/manager/homepage/foods/change/special?fid=" + <%= list[i].id %>' <% if (list[i].special) { %>disabled='true'<% } %>>设为特色</button>
+						  <button class="btn btn-primary" type='button' onclick='window.location.href = "/manager/homepage/foods/change/foodpic?fid=" + <%= list[i].id %>'>上传图片</button>
+  						  <button class="btn btn-danger" type='button' onclick='window.location.href="/manager/homepage/foods/change/delete?fid=" + <%= list[i].id %>' >删除</button></td>
+					    </div>
 					</tr>
 				</form>
 		<% } %>
-		<form action='/manager/homepage/foods/add' method='GET'>
+			<form action='/manager/homepage/foods/add' method='GET'>
 			<tr>
 				<td>加菜</td>
 				<td><input type='text' name='name' maxlength='32'/></td>
 				<td><input type='text' name='origin' maxlength='64'/></td>
 				<td><input type='text' name='price' maxlength='16'/></td>
 				<td><input type='text' name='feature' maxlength='128'/></td>
-				<td colspan='4'><input type='submit' value='服务员！'/></td>
+				<td colspan='4'><button class="btn btn-primary btn-sm" type='submit'>服务员</button></td>
 			</tr>
-		</table>
-		</form>
+            </form>			
+    	</tbody>
+	  </table>
+    </div>
+                </div>
+		      </div>
+            </div>
+          </div>   
   </body>
 </html>
+
+
+					  

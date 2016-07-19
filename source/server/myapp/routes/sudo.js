@@ -25,7 +25,7 @@ router.get('/users/list:page', function(req, res, next) {
 			console.log(new Date() + ': [mysql-query] - ' + err);
 		else
 			console.log(new Date() + ': [mysql-query] - Succeeded! - ' + rows.length);
-		res.render('userList', {title: 'UserList', page: page, list: rows});
+		res.render('userList', {title: 'UserList', username: req.session.username, usertype: req.session.type, page: page, list: rows});
 	});
 });
 
@@ -42,7 +42,7 @@ router.get('/restaurants/list:page', function(req, res, next) {
 			console.log(new Date() + ': [mysql-query] - ' + err);
 		else
 			console.log(new Date() + ': [mysql-query] - Succeeded! - ' + rows.length);
-		res.render('restaurantList', {title: 'RestaurantList', page: page, list: rows});
+		res.render('restaurantList', {title: 'RestaurantList', username: req.session.username, usertype: req.session.type, page: page, list: rows});
 	});
 });
 
@@ -72,7 +72,8 @@ router.get('/comments/list:page', function(req, res, next) {
 			console.log(new Date() + ': [mysql-query] - ' + err);
 		else
 			console.log(new Date() + ': [mysql-query] - Succeeded! - ' + rows.length);
-		res.render('commentList', {title: 'CommentList', page: page, list: rows, search: {uname: req.query.uname, fname: req.query.fname}});
+		res.render('commentList', {title: 'CommentList', username: req.session.username, usertype: req.session.type, page: page, list: rows, search: {uname: req.query.uname, fname: req.query.fname}});
+	    console.log(req.session.username);
 	});		
 });
 
@@ -120,7 +121,7 @@ router.get('/foods/list:page', function(req, res, next) {
 			console.log(new Date() + ': [mysql-query] - ' + err);
 		else
 			console.log(new Date() + ': [mysql-query] - Succeeded! - ' + rows.length);
-		res.render('foodList', {title: 'foodList', page: page, list: rows, search: {rname: req.query.rname}});
+		res.render('foodList', {title: 'foodList', username: req.session.username, usertype: req.session.type, page: page, list: rows, search: {rname: req.query.rname}});
 	});		
 });
 
@@ -178,7 +179,7 @@ router.get('/moments/list:page', function(req, res, next) {
 			console.log(new Date() + ': [mysql-query] - ' + err);
 		else
 			console.log(new Date() + ': [mysql-query] - Succeeded! - ' + rows.length);
-		res.render('momentList', {title: 'momentList', page: page, list: rows, search: {uname: req.query.uname}});
+		res.render('momentList', {title: 'momentList', username: req.session.username, usertype: req.session.type, page: page, list: rows, search: {uname: req.query.uname}});
 	});		
 });
 
