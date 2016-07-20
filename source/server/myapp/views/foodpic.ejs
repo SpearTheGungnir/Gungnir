@@ -1,21 +1,41 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel='stylesheet' href='/stylesheets/style.css' />
+      <!-- 新 Bootstrap 核心 CSS 文件 -->
+      <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+      <!-- 可选的Bootstrap主题文件（一般不用引入） >
+      <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"-->
+      <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+      <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+      <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+      <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	</head>
 	<body>
-		<form action='/manager/homepage/foods/change/upload' method='POST' enctype='multipart/form-data'>
-		<table>
-			<tr><td>
-			<input type='hidden' name='fid' value='<%= fid %>'/>
-			<input type='file' name='upload' accept='image/*'/>
-			</td></tr>
-			<tr><td>
-			<input type='submit' value='上传图片'/>
-			</td></tr>
-			<tr><td><button type='button' onclick='window.location.href="/manager/homepage/foods/list"'>返回</button></td></tr>
-		</table>
-		</form>
+      <nav class="navbar navbar-inverse navbar-static-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">GUNGNIR</a>
+            <p class="navbar-text navbar-right">Signed in as <a href="#" class="navbar-link"><%= username %></a></p>
+        </div>
+      </nav>
+	  <div class="well">
+	    <div class="row show-grid">
+		  <div class="col-lg-3">
+	        <form action='/manager/homepage/foods/change/upload' method='POST' enctype='multipart/form-data'>
+			  <input type='hidden' name='fid' value='<%= fid %>'/>
+			  <input type='file' name='upload' accept='image/*'/>
+              </br>
+			  <button type='submit' class="btn btn-primary">上传图片</button>
+			  </br></br>
+              <button type='button' class="btn btn-danger" onclick='window.location.href="/manager/homepage/foods/list"'>返回</button>		    
+		    </form>
+		  </div>
+		  <div class="col-lg-9">
+    	    <a href="#" class="thumbnail">
+              <img src="<%= pic %>" >
+            </a>
+		  </div>  
+		</div>
+	  </div>
 	</body>
 </html>
 

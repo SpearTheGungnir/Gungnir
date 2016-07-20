@@ -233,7 +233,21 @@ router.get('/homepage/foods/change/foodpic', function(req, res, next) {
 		res.render('result', foodjson);
 		return;
 	}
-	res.render('foodpic', {fid : fid});
+	var query = 'select photo from foods where id = ?';
+	console.log(new Date() + ': [mysql-query] - ' + query);
+    mysql.query(query, [req.query.fid], function(err, rows, fields) {
+		if (err) {
+			console.log(new Date() + ': [mysql-query] - ' + err);
+			res.render('result', foodjson);
+			return;
+		}
+		if (rows.length === 0) {
+			console.log(new Date() + ': [foods] - bad food');
+			res.render('result', foodjson);
+			return;
+		}
+		res.render('foodpic', {username: req.session.username, pic: rows[0].photo, fid : fid});
+	});
 });
 
 /* UPLOAD food */
