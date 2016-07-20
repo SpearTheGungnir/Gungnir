@@ -10,17 +10,10 @@
     <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-		    
+    <script type="text/javascript" src="/js/logout.js"></script>	    
   
     <title><%= title %></title>
-		<script>
-			function logout() {
-				var xmlhttp = new XMLHttpRequest();
-				xmlhttp.open('GET', '/users/logout', true);
-				xmlhttp.send();
-				window.location.href = '/';
-			}
-		</script>
+		
   </head>
   <body>
   	    <nav class="navbar navbar-inverse navbar-static-top">
