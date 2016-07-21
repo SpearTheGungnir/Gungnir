@@ -309,7 +309,7 @@ router.get('/addMark', function(req, res, next) {
 	var score = parseInt(req.query.score);
 	if (req.query.rid == null || req.query.rid == '' ||
 		req.query.uid == null || isNaN(score) || score < 0 || score > 5 ||
-		req.session.id != req.query.uid) {  //输入检测
+		req.session.userid != req.query.uid) {  //输入检测
 		console.log(new Date()  + ': [add-rmark-restaurant] - bad request');
 		res.json({res : false, info : 'bad request'});
 		return;
